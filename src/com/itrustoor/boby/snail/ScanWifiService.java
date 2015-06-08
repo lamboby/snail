@@ -10,7 +10,7 @@ import org.json.JSONObject;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.itrustoor.boby.snial.R;
+import com.itrustoor.boby.snail.R;
 
 import android.app.AlarmManager;
 import android.app.Notification;
@@ -114,7 +114,8 @@ public class ScanWifiService extends Service{
 	}	
 	@Override 
 	public int onStartCommand(Intent intent,int flags,int startId){
-		new Thread(new Runnable(){
+		new Thread(new Runnable()
+		{
 			@Override 
 			public void run(){
 				//服务处理程序
@@ -137,7 +138,7 @@ public class ScanWifiService extends Service{
 					once=1;
 				}				 
 				
-		}
+			}
 		}).start();		
 		AlarmManager manager=(AlarmManager) getSystemService(ALARM_SERVICE);
 		int anHour=30*1000;
@@ -153,51 +154,50 @@ public class ScanWifiService extends Service{
 		super.onDestroy();
 		Log.d("服务","服务销毁");
 	}
-		class WifiReceiver extends BroadcastReceiver
+	class WifiReceiver extends BroadcastReceiver
 	{
 		@Override 
 		public void onReceive(Context context, Intent intent)
 		{
-			 ScanResult result = null;
-				wifiList = mainWifi.getScanResults();
+			ScanResult result = null;
+			wifiList = mainWifi.getScanResults();
 				//Toast.makeText(context, "扫描到 "+wifiList.size()+" 个热点信息.", Toast.LENGTH_LONG).show();	
 				
 				//扫描到WIFI后做出判断,上传数据
-				for (int i = 0; i < wifiList.size(); i++) {
-					result = wifiList.get(i);	
-					int intin= wifiin(result.toString());
-					if (i!=0){
+			for (int i = 0; i < wifiList.size(); i++) 
+			{
+				result = wifiList.get(i);	
+				int intin= wifiin(result.toString());
+				if (i!=0){
 					if (status!=3) {
-			   			if (status==0) {
-			   				
-			   				
-			   				//到达
-			    			}
-			 			status=3;						
-			        		break; 
-					}        			 
-				}
-			        	        		 
-			        		 
+		   				if (status==0) {
+		   				
+		   				
+		   				//到达
+		    				}
+		   					status=3;						
+		   					break; 
+						}        			 
+					}       		 
 				}
 				if (status>0) {
 					status--;
 					if (status==0){
 						//离开
-					}
-				}      		 
+				}
+			}      		 
 								
-				if(WifiStatus==0) {
-					CloseWifi();
-					Log.v("关闭", "关闭WIFI");
-				}	 
+			if(WifiStatus==0) {
+				CloseWifi();
+				Log.v("关闭", "关闭WIFI");
+			}	 
 				
-				for (int i = 0; i <wifiList.size(); i++) {
-					 result= wifiList.get(i);									
-				//	if (result.BSSID).		
-					//根据标志位,判断是否关闭WIFI						
-					 
-					 }					
+			for (int i = 0; i <wifiList.size(); i++) 
+			{
+				result= wifiList.get(i);									
+				//if (result.BSSID).		
+				//根据标志位,判断是否关闭WIFI						 
+			}					
         }  
 	}
 	//打开WIFI
@@ -217,8 +217,7 @@ public class ScanWifiService extends Service{
 				in=i;
 				break;
 			}
-		}
-		
+		}		
 		return in;
 	}
 	
@@ -229,9 +228,8 @@ public class ScanWifiService extends Service{
 		//判断wifi已连接的条件
 		if(wifi ==WifiManager.WIFI_STATE_ENABLED||wifi==WifiManager.WIFI_STATE_ENABLING)
 			return 1;
-			else
-				return 0;		
-	
+		else
+			return 0;		
 	}
 	//关闭WIFI
 	public void CloseWifi()
@@ -242,5 +240,4 @@ public class ScanWifiService extends Service{
 			WifiStatus=2;
 		}
 	}
-
 }

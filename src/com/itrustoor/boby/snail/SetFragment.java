@@ -1,6 +1,6 @@
 package com.itrustoor.boby.snail;
 
-import com.itrustoor.boby.snial.R;
+import com.itrustoor.boby.snail.R;
 
 import android.app.Fragment;
 import android.os.Bundle;

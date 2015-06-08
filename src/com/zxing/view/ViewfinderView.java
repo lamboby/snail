@@ -28,7 +28,7 @@ import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.itrustoor.boby.snial.R;
+import com.itrustoor.boby.snail.R;
 import com.google.zxing.ResultPoint;
 import com.zxing.camera.CameraManager;
 

@@ -27,7 +27,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
-import com.itrustoor.boby.snial.R;
+import com.itrustoor.boby.snail.R;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
 import com.zxing.activity.CaptureActivity;

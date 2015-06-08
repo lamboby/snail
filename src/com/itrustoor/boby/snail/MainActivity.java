@@ -1,6 +1,6 @@
 package com.itrustoor.boby.snail;
 
-import com.itrustoor.boby.snial.R;
+import com.itrustoor.boby.snail.R;
 
 import android.app.Activity;
 import android.app.FragmentManager;
@@ -23,23 +23,20 @@ public class MainActivity extends Activity implements OnClickListener {
 	private BarcodeFragment barcodeFragment;
 	private SetFragment setFragment;
 	private PlaceFragment placeFragment;
-
 	private View barcodeLayout,setLayout,placeLayout;
 	private ImageView barcodeImage,setImage,placeImage;
-	private TextView barcodeText,setText,placeText;
-	
+	private TextView barcodeText,setText,placeText;	
 	private FragmentManager fragmentManager;
-
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState) 
+	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-		initViews();
-		
+		initViews();		
 		fragmentManager=getFragmentManager();
 		if (savedInstanceState==null)
 		{
-		setTabSelection(0);
+			setTabSelection(0);
 		}
 	}
 
@@ -47,42 +44,34 @@ public class MainActivity extends Activity implements OnClickListener {
 	{
 		setLayout=findViewById(R.id.set_layout);
 		placeLayout=findViewById(R.id.place_layout);
-
-		barcodeLayout=findViewById(R.id.barcode_layout);
-		
+		barcodeLayout=findViewById(R.id.barcode_layout);		
 		setImage=(ImageView)findViewById(R.id.set_image);
 		placeImage=(ImageView)findViewById(R.id.place_image);
-
-		barcodeImage=(ImageView)findViewById(R.id.barcode_image);
-		
+		barcodeImage=(ImageView)findViewById(R.id.barcode_image);		
 		setText=(TextView)findViewById(R.id.set_text);
 		placeText=(TextView)findViewById(R.id.place_text);
-
-		barcodeText=(TextView)findViewById(R.id.barcode_text);
-		
+		barcodeText=(TextView)findViewById(R.id.barcode_text);		
 		setLayout.setOnClickListener(this);
 		placeLayout.setOnClickListener(this);		
 		barcodeLayout.setOnClickListener(this);
-				}
+	}
 	@Override
-	public void onClick(View v){
-	
-		switch(v.getId()){
-	
-		case R.id.barcode_layout:
-			setTabSelection(0);
-			break;
-		case R.id.place_layout:
-			setTabSelection(1);
-			break;
-				case R.id.set_layout:
-			setTabSelection(2);
-			break;
-		default:
-			break;
+	public void onClick(View v){	
+		switch(v.getId())
+		{	
+			case R.id.barcode_layout:
+				setTabSelection(0);
+				break;
+			case R.id.place_layout:
+				setTabSelection(1);
+				break;
+			case R.id.set_layout:
+				setTabSelection(2);
+				break;
+			default:
+				break;
 		}
 	}
-	
 	private void setTabSelection(int index) {  
         // 每次选中之前先清楚掉上次的选中状态  
         clearSelection();  
@@ -107,12 +96,10 @@ public class MainActivity extends Activity implements OnClickListener {
             if (placeFragment == null) {                
                placeFragment = new PlaceFragment();  
                 transaction.add(R.id.content, placeFragment);  
-            } else {  
-              
+            } else {                
                 transaction.show(placeFragment);  
             }  
-            break;  
-       
+            break;         
         case 2:  
             // 当点击了设置tab时，改变控件的图片和文字颜色  
             setImage.setImageResource(R.drawable.setselect);  
@@ -132,30 +119,28 @@ public class MainActivity extends Activity implements OnClickListener {
         transaction.commit();  
     }  
 	
-	 private void clearSelection() {  
-	        barcodeImage.setImageResource(R.drawable.personunselect);  
-	        barcodeText.setTextColor(Color.parseColor("#999999"));  
-	        placeImage.setImageResource(R.drawable.placeunselect);  
-	        placeText.setTextColor(Color.parseColor("#999999"));  
-	  
-	        setImage.setImageResource(R.drawable.setunselect);  
-	        setText.setTextColor(Color.parseColor("#999999"));  
-	    }  
+	private void clearSelection() {  
+		barcodeImage.setImageResource(R.drawable.personunselect);  
+		barcodeText.setTextColor(Color.parseColor("#999999"));  
+		placeImage.setImageResource(R.drawable.placeunselect);  
+		placeText.setTextColor(Color.parseColor("#999999")); 	  
+		setImage.setImageResource(R.drawable.setunselect);  
+		setText.setTextColor(Color.parseColor("#999999"));  
+	}  
 	 
-	 private void hideFragments(FragmentTransaction transaction) {  
-
-	
-	    if (barcodeFragment != null) {  
+	private void hideFragments(FragmentTransaction transaction) 
+	{ 	
+		if (barcodeFragment != null) {  
 	         transaction.hide(barcodeFragment);   
-      }  
-	        if (placeFragment != null) {  
-	            transaction.hide(placeFragment);  
-	       }  
-	       
-	        if (setFragment != null) {  
-	            transaction.hide(setFragment);  
-	       }  
 	    }  
+	    if (placeFragment != null) {  
+	            transaction.hide(placeFragment);  
+	    }  
+	       
+		if (setFragment != null) {  
+			transaction.hide(setFragment);  
+		}  
+	}  
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -166,12 +151,10 @@ public class MainActivity extends Activity implements OnClickListener {
 	//屏蔽返回健
 	@Override
     public boolean onKeyDown(int keyCode, KeyEvent event){
-    if(KeyEvent.KEYCODE_BACK==keyCode)
-    return false ;
-    return super.onKeyDown(keyCode, event);
-    } 
-	
-	
+		if(KeyEvent.KEYCODE_BACK==keyCode)
+			return false ;
+    	return super.onKeyDown(keyCode, event);
+    } 	
    
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
