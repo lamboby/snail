@@ -1,0 +1,167 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="fill_parent" android:layout_height="wrap_content">
+
+<RelativeLayout
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:scrollbars="none" >
+
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginLeft="5dip"
+        android:layout_marginRight="5dip"
+        android:layout_marginTop="15dip"
+        android:scrollbarAlwaysDrawVerticalTrack="true"
+        android:scrollbars="none" >
+
+        <LinearLayout
+            android:id="@+id/itemContainer"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="60dip"
+            android:orientation="vertical"
+            android:scrollbars="horizontal" >
+
+            <LinearLayout
+                android:id="@+id/linearfullschool"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+       
+                android:duplicateParentState="true"
+                android:gravity="center_vertical" >
+                <TextView
+                    android:id="@+id/schoolfullname"
+                    android:layout_width="60dip"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:text="全称"
+                    android:textStyle="bold" />
+                <EditText
+                    android:id="@+id/Tschoolfullname"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:editable="false"
+                    android:layout_weight="1"
+        >
+                </EditText>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/linearfullschool"
+
+                android:duplicateParentState="true"
+                android:gravity="center_vertical" >
+
+                <TextView
+                    android:layout_width="60dip"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:text="编码"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+              		android:id="@+id/Tschoolshortname"
+                    android:layout_weight="1"
+                     android:editable="false"
+                    android:maxLength="4" >
+
+                </EditText>
+            </LinearLayout>
+            <LinearLayout
+                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/linearfullschool"
+                android:duplicateParentState="true"
+                android:gravity="center_vertical" >
+
+</LinearLayout>
+ <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:duplicateParentState="true"
+                android:gravity="center_vertical" >
+
+</LinearLayout>
+ <LinearLayout
+                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"             
+                android:duplicateParentState="true"
+                android:gravity="center_vertical" >
+
+</LinearLayout>
+
+  <LinearLayout
+                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/linearfullschool"
+                android:duplicateParentState="true"
+                android:gravity="center_vertical" >
+                
+
+</LinearLayout>
+ <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/linearfullschool"
+
+                android:duplicateParentState="true"
+                android:gravity="center_vertical" >
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/linearfullschool"
+                android:duplicateParentState="true"
+                android:gravity="center_vertical" >
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/linearfullschool"
+
+                android:duplicateParentState="true"
+                android:gravity="center_vertical" >
+            </LinearLayout>
+                 <LinearLayout
+					   android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/linearfullschool"
+                android:duplicateParentState="true"
+                android:gravity="center_vertical" >		
+                <TextView
+                    android:layout_width="60dip"
+                    android:layout_height="wrap_content"
+
+                    android:gravity="center_vertical"
+                    android:text="MAC列表"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:id="@+id/Listwifi"
+                    android:editable="false"
+                    android:hint=""/>
+		</LinearLayout>
+
+        <Button
+            android:id="@+id/btn_scanbarcode"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="23dp"
+            android:background="@drawable/button_selector"
+            android:text="扫描二维码"
+            android:layout_margin="20dp"
+            android:textColor="@android:color/white" />
+        
+    </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>
+</ScrollView>
