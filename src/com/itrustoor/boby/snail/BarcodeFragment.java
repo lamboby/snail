@@ -1,38 +1,28 @@
 
 package com.itrustoor.boby.snail;
 
-import java.util.ArrayList;
-import java.util.List;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
-
 import com.itrustoor.boby.snail.R;
 import com.itrustoor.boby.snail.HttpUtil.HttpCallbackListener;
 import com.zxing.activity.CaptureActivity;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 public class BarcodeFragment extends Fragment{	
@@ -46,7 +36,7 @@ public class BarcodeFragment extends Fragment{
 	@Override  
     public void onActivityCreated(Bundle savedInstanceState) {  
         super.onActivityCreated(savedInstanceState);  
-        Button       scanBarCodeButton = (Button) getActivity().findViewById(R.id.btn_scanbarcode);  
+        Button	scanBarCodeButton = (Button) getActivity().findViewById(R.id.btn_scanbarcode);  
         scanBarCodeButton.setOnClickListener(new OnClickListener() {  
             @Override  
             public void onClick(View v) {  
@@ -151,11 +141,11 @@ private Handler handler=new Handler()
 	                  .setTitle("服务器返回码:"+resObject.getString("Code"))
 	                  .setMessage(resObject.getString("Msg"))
 	                  .setPositiveButton("确定",null)
-	                  . show();	 	  		 //如果返回码不等于0
+	                  .show();	 	  		 //如果返回码不等于0
 	   			}
 	   		}
 	   		catch (Exception e) 
-	   		{  
+	   		{
 	   		}  	 	
 	   	}	   			
 	}; 

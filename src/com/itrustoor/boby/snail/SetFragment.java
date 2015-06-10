@@ -8,10 +8,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class SetFragment extends Fragment{
+public class SetFragment extends Fragment {
 	@Override
-	public View onCreateView(LayoutInflater inflater,ViewGroup container,Bundle savedInstanceState){
-		View setLayout=inflater.inflate(R.layout.set, container,false);
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		View setLayout = inflater.inflate(R.layout.set, container, false);
 		return setLayout;
 	}
 

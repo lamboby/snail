@@ -24,7 +24,7 @@
         android:layout_marginTop="10dp"
         android:gravity="center_horizontal"
         android:text="小蜗牛报平安"
-        android:textColor="#000000"
+        android:textColor="#ffffff"
         android:textSize="20sp" />
 
     <RelativeLayout
