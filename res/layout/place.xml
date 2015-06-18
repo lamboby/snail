@@ -1,11 +1,11 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content" >
 
     <LinearLayout
         android:id="@+id/linearLayout1"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="385dp"
         android:layout_marginLeft="10dip"
         android:layout_marginRight="10dip"
         android:layout_marginTop="15dip"
@@ -15,6 +15,7 @@
             android:id="@+id/itemContainer"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="15dip"
             android:background="@drawable/border"
             android:minHeight="60dip"
             android:orientation="vertical" >
@@ -31,50 +32,64 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:paddingLeft="10dip"
-                    android:src="@drawable/location_icon" />
+                    android:src="@drawable/place48" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1.0"
                     android:paddingLeft="5dip"
-                    android:text="位置状态"
-                    android:textSize="15dp" />
+                    android:text="	位置"
+                    android:textSize="18sp" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="45dip"
+                android:background="@drawable/borderbottom"
                 android:duplicateParentState="true"
-                android:gravity="center_vertical"
-                android:orientation="vertical" >
+                android:gravity="center_vertical" >
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1.0"
-                    android:paddingLeft="10dp"
-                    android:paddingTop="5dip"
-                    android:text="学校名称"
-                    android:textSize="12dp" />
+                    android:layout_weight="1"
+                    android:paddingLeft="5dip"
+                    android:text="状态"
+                    android:textSize="18sp" />
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:id="@+id/schoolname"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1.0"
-                    android:paddingLeft="10dp"
+                    android:layout_weight="3"
                     android:paddingTop="5dip"
-                    android:text="到达时间"
-                    android:textSize="12dp" />
+                    android:text="无变化" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dip"
+                android:background="@drawable/borderbottom"
+                android:duplicateParentState="true"
+                android:gravity="center_vertical" >
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1.0"
-                    android:paddingLeft="10dp"
-                    android:paddingTop="5dip"
-                    android:text="未成功上传记录"
-                    android:textSize="12dp" />
+                    android:layout_weight="1"
+                    android:paddingLeft="5dip"
+                    android:text="时间"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/schooltime"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:paddingTop="5dip" />
+
             </LinearLayout>
         </LinearLayout>
 
@@ -98,77 +113,142 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:paddingLeft="10dip"
-                    android:src="@drawable/video_controller_zoom_press" />
+                    android:src="@drawable/wifi48" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1.0"
                     android:paddingLeft="5dip"
-                    android:text="网络状态"
-                    android:textSize="15dp" />
+                    android:text="	WIFI"
+                    android:textSize="18sp" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dip"
-                android:layout_weight="73"
+                android:layout_height="45dip"
+                android:background="@drawable/borderbottom"
                 android:duplicateParentState="true"
-                android:gravity="center_vertical"
-                android:orientation="vertical" >
+                android:gravity="center_vertical" >
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1.0"
-                    android:paddingLeft="10dp"
-                    android:paddingTop="5dip"
-                    android:text="扫描WIFI"
-                    android:textSize="12dp" />
+                    android:layout_weight="1"
+                    android:paddingLeft="5dip"
+                    android:text="状态"
+                    android:textSize="18sp" />
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:id="@+id/wifistatus"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1.0"
-                    android:paddingLeft="10dp"
+                    android:layout_weight="3"
                     android:paddingTop="5dip"
-                    android:text="上传数据"
-                    android:textSize="12dp" />
+                    android:text="系统控制WIFI开关" />
+
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dip"
+                android:background="@drawable/borderbottom"
+                android:duplicateParentState="true"
+                android:gravity="center_vertical" >
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingLeft="5dip"
+                    android:text="扫描"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/wifiscan"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:paddingTop="5dip"/>
+            </LinearLayout>
         </LinearLayout>
 
-        <Button
-            android:id="@+id/btn_scanbarcode"
+        <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dip"
-            android:layout_marginRight="10dip"
-            android:layout_marginTop="10dip"
-            android:background="@drawable/button_selector"
-            android:text="查询状态信息"
-            android:textColor="@android:color/white" />
+            android:layout_marginTop="15dip"
+            android:background="@drawable/border"
+            android:minHeight="60dip"
+            android:orientation="vertical" >
 
-        <Button
-            android:id="@+id/btn_startservices"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:layout_marginTop="10dip"
-            android:background="@drawable/button_selector"
-            android:text="开启服务"
-            android:textColor="@android:color/white" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dip"
+                android:background="@drawable/borderbottom"
+                android:duplicateParentState="true"
+                android:gravity="center_vertical" >
 
-        <Button
-            android:id="@+id/stop_services"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:layout_marginTop="10dip"
-            android:background="@drawable/button_selector"
-            android:text="关闭服务"
-            android:textColor="@android:color/white" />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="10dip"
+                    android:src="@drawable/set48" />
 
-    </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:paddingLeft="5dip"
+                    android:text="	参数"
+                    android:textSize="18sp" />
+            </LinearLayout>
 
-</RelativeLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dip"
+                android:background="@drawable/borderbottom"
+                android:duplicateParentState="true"
+                android:gravity="center_vertical" >
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingLeft="5dip"
+                    android:text="频率"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/scanfrequency"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:paddingTop="5dip" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dip"
+                android:background="@drawable/borderbottom"
+                android:duplicateParentState="true"
+                android:gravity="center_vertical" >
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingLeft="5dip"
+                    android:text="二维码"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/bindbarcode"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:paddingTop="5dip" />
+            </LinearLayout>
+        </LinearLayout>
+</LinearLayout>
+</ScrollView>

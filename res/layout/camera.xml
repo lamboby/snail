@@ -37,7 +37,7 @@
         <Button
             android:id="@+id/btn_cancel_scan"
             android:layout_width="230dp"
-            android:layout_height="40dp"
+            android:layout_height="50dp"
             android:layout_alignParentBottom="true"
             android:layout_centerInParent="true"
             android:layout_marginBottom="75dp"
@@ -61,6 +61,19 @@
                 android:textSize="15sp"
                 android:textStyle="bold" />
         </LinearLayout> -->
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/btn_cancel_scan"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="16dp"
+            android:layout_weight="1.0"
+            android:paddingLeft="5dip"
+            android:text="调整手机与二维码之间的距离进行扫描"
+            android:textColorHint="@color/white"
+            android:textColorLink="@color/white"
+            android:textSize="15dp" />
         
     </RelativeLayout>
 

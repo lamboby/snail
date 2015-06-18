@@ -14,13 +14,14 @@
             android:orientation="vertical" >
 
             <LinearLayout
+                android:id="@+id/linearScanbarcode"
                 android:layout_width="match_parent"
                 android:layout_height="50dip"
                 android:layout_marginLeft="10dip"
                 android:layout_marginRight="10dip"
                 android:layout_marginTop="10dip"
                 android:background="@drawable/bordertop"
-                android:duplicateParentState="true"
+                android:clickable="true" 
                 android:gravity="center_vertical" >
 
                 <ImageView
@@ -50,7 +51,7 @@
                 android:layout_height="50dip"
                 android:layout_marginLeft="10dip"
                 android:layout_marginRight="10dip"
-                android:background="@drawable/bordertop"
+                android:background="@drawable/borderbottom"
                 android:duplicateParentState="true"
                 android:gravity="center_vertical" >
 
@@ -77,13 +78,14 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/linearSync"
                 android:layout_width="match_parent"
                 android:layout_height="50dip"
                 android:layout_marginLeft="10dip"
                 android:layout_marginRight="10dip"
                 android:layout_marginTop="10dip"
                 android:background="@drawable/bordertop"
-                android:duplicateParentState="true"
+                android:clickable="true"
                 android:gravity="center_vertical" >
 
                 <ImageView
@@ -109,12 +111,13 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/linearFrequency"
                 android:layout_width="match_parent"
                 android:layout_height="50dip"
                 android:layout_marginLeft="10dip"
                 android:layout_marginRight="10dip"
-                android:background="@drawable/bordertop"
-                android:duplicateParentState="true"
+                android:background="@drawable/borderbottom"
+                android:clickable="true"
                 android:gravity="center_vertical" >
 
                 <ImageView
@@ -131,6 +134,14 @@
                     android:paddingLeft="5dip"
                     android:text="  感应频率"
                     android:textSize="15dp" />
+                <TextView
+                    android:id="@+id/frequency"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="5dip"
+                    android:text=" 快(30秒)"
+                    android:textColor="#b0b0b0"
+                    android:textSize="15dp" />
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -140,6 +151,7 @@
             </LinearLayout>
 
             <LinearLayout
+            
                 android:layout_width="match_parent"
                 android:layout_height="50dip"
                 android:layout_marginLeft="10dip"
@@ -233,7 +245,7 @@
                     android:src="@drawable/select" />
             </LinearLayout>
 			<LinearLayout
-                   android:layout_width="match_parent"
+                android:layout_width="match_parent"
                 android:layout_height="50dip"
                 android:layout_marginLeft="10dip"
                 android:layout_marginRight="10dip"
@@ -323,16 +335,15 @@
                     android:src="@drawable/sl" />
             </LinearLayout>
             
-            
-
             <LinearLayout
+                android:id="@+id/linearLogout"
                 android:layout_width="match_parent"
                 android:layout_height="50dip"
                 android:layout_marginLeft="10dip"
                 android:layout_marginRight="10dip"
                 android:layout_marginTop="10dip"
                 android:background="@drawable/bordertop"
-                android:duplicateParentState="true"
+                android:clickable="true"
                 android:gravity="center_vertical" >
 
                 <ImageView
@@ -347,7 +358,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1.0"
                     android:paddingLeft="5dip"
-                    android:text="  退出登录"
+                    android:text=" 注销"
                     android:textSize="15dp" />
 
                 <ImageView

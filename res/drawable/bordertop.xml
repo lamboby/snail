@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android" >
-  <solid android:color="#ffFFFF" />  
-  
-    <stroke  
-        android:width="0.1dp"  
-        android:color="#aaaaaa" />  
-  
-    <padding  
-       android:bottom="0dp"
-        android:left="0.5dp"  
-        android:right="0.5dp"  
-        android:top="1dp" />    
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
 
-</shape>
+    <!-- 没有焦点时的背景颜色 -->
+    <item android:state_window_focused="false">
+        <shape >
+            <solid android:color="#ffFFFF" />  
+            <stroke android:width="0.1dp" android:color="#aaaaaa" />
+            <padding android:bottom="0dp" android:left="0.5dp" android:right="0.5dp" android:top="1dp" />
+        </shape></item>
+
+    <!-- 触摸模式下单击时的背景颜色 -->
+
+    <item android:drawable="@color/unfocused" android:state_focused="false" android:state_pressed="true"><shape>
+            <stroke android:width="0.1dp" android:color="#aaaaaa" />
+            <padding android:bottom="0dp" android:left="0.5dp" android:right="0.5dp" android:top="1dp" />
+        </shape></item>
+</selector>
