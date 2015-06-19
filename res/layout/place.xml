@@ -59,7 +59,7 @@
                     android:textSize="18sp" />
 
                 <TextView
-                    android:id="@+id/schoolname"
+                    android:id="@+id/atschoolname"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="3"
@@ -84,7 +84,7 @@
                     android:textSize="18sp" />
 
                 <TextView
-                    android:id="@+id/schooltime"
+                    android:id="@+id/atschooltime"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="3"

@@ -1,0 +1,4 @@
+<resources>
+     <item type="drawable" name="darkgray">#404040ff</item>
+     <item type="drawable" name="black">#ff000000</item>
+ </resources>
