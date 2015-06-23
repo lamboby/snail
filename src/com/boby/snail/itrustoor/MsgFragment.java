@@ -31,7 +31,7 @@ public class MsgFragment<User> extends ListFragment {
 
 	// private MyListAdapter adapter=null;
 	private int[] images = new int[] { R.drawable.welcome_0, R.drawable.wifi_1,
-			R.drawable.cloud_2, R.drawable.err_3 };
+			R.drawable.cloud_2, R.drawable.err_3 ,R.drawable.data_4};
 
 	private IntentFilter intentFilter;
 	private LocalReceiver localReceiver;
@@ -54,6 +54,12 @@ public class MsgFragment<User> extends ListFragment {
 	class LocalReceiver extends BroadcastReceiver {
 		@Override
 		public void onReceive(Context context, Intent intent) {
+			Data myconfig = (Data) getActivity().getApplication();
+			TextView buffercount = (TextView) getActivity().findViewById(
+					R.id.buffercount);
+			buffercount.setText(String.valueOf(myconfig.getcount()));
+
+			
 			SimpleDateFormat formatter = new SimpleDateFormat(
 					"yyyy-MM-dd  HH:mm:ss");
 			Date curDate = new Date(System.currentTimeMillis());// 获取当前时间
@@ -68,9 +74,9 @@ public class MsgFragment<User> extends ListFragment {
 			TextView viewWifistatus = (TextView) getActivity().findViewById(
 					R.id.wifistatus);
 
-			if (intent.getStringExtra("Type") == "4") {
+			if (intent.getStringExtra("Type") == "14") {
 				viewWifiscan.setText(atttime + intent.getStringExtra("Value"));
-			} else if (intent.getStringExtra("Type") == "5") {
+			} else if (intent.getStringExtra("Type") == "15") {
 				viewWifistatus.setText(atttime + intent.getStringExtra("Value"));
 			} else {
 				if (intent.getStringExtra("Type") == "0") {
@@ -82,6 +88,7 @@ public class MsgFragment<User> extends ListFragment {
 				addItem(atttime, intent.getStringExtra("Value"),
 						Integer.parseInt(intent.getStringExtra("Type")));
 			}
+			
 		}
 	}
 

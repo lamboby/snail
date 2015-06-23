@@ -108,7 +108,7 @@ public class SetFragment extends Fragment {
 				// 绑定二维码
 				bindcard("sch_id=" + schoolid + "&stu_id=" +  String.valueOf(sstudentid)
 						+ "&fml_id=" +  String.valueOf(sfamilyid) + "&card=" +  String.valueOf(sstudentid)
-						+ schoolid);
+						+"_"+ schoolid);
 				
 			} else {
 				new AlertDialog.Builder(getActivity()).setTitle("提示")
@@ -153,7 +153,7 @@ public class SetFragment extends Fragment {
 				sync("stu_id=" + sstudentid);
 				break;
 			case R.id.linearFrequency:
-				final String[] items = { "快(10秒)", "中(30秒)", "慢(60秒)" };
+				final String[] items = { "快(15秒)", "中(30秒)", "慢(60秒)" };
 
 				new AlertDialog.Builder(getActivity())
 						.setTitle("请选择")

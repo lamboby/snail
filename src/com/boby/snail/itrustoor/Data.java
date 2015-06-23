@@ -1,5 +1,8 @@
 package com.boby.snail.itrustoor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -13,6 +16,8 @@ public class Data extends Application {
 	private int id;
 	private String atplace;
 	private String atplacetime;
+
+	private List<DataBuffer> bufferList;
 
 	public String getatplace() {
 		return atplace;
@@ -113,6 +118,28 @@ public class Data extends Application {
 		return id;
 	}
 
+	public void additem(DataBuffer object) {
+		bufferList.add(object);
+	}
+
+	public DataBuffer getlist() {
+		if (bufferList.size() > 0) {
+			return bufferList.get(0);
+		} else
+			return null;
+
+	}
+	
+	public int getcount(){
+		return bufferList.size();
+	}
+
+	public void delitem() {
+		if (bufferList.size() > 0) {
+			bufferList.remove(0);
+		}
+	}
+
 	@Override
 	public void onCreate() {
 		SharedPreferences pref = getSharedPreferences("snail", MODE_PRIVATE);
@@ -122,6 +149,7 @@ public class Data extends Application {
 		atplace = pref.getString("atplace", "");
 		atplacetime = pref.getString("atplacetime", "");
 		id = pref.getInt("id", 0);
+		bufferList = new ArrayList<DataBuffer>();
 		super.onCreate();
 	}
 

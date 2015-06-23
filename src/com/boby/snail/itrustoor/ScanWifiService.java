@@ -20,6 +20,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.IBinder;
@@ -123,6 +124,35 @@ public class ScanWifiService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
+		// 查看缓存中是否有数据,如有数据,检查网络连接,网络连接正常则发送数据到云端
+		DataBuffer buffer;
+		buffer = myconfig.getlist();
+		if (buffer != null) {
+			if (isNetworkAvailable()) {
+				String strtvbox = "card=" + buffer.getcard() + "&att_time="
+						+ buffer.getatttime() + "&type=" + buffer.getIsin()
+						+ "&sch_id=" + buffer.getschoolid()
+						+ "&kind=0&entex_id=1";
+
+				HttpUtil.sendHttpPostRequest("/tvbox/attends", strtvbox,
+						new HttpCallbackListener() {
+
+							@Override
+							public void onFinish(String response) {
+								sendLocalBroadcast("2", "上传缓存队列数据成功");
+								Log.v("Debug", response);
+								myconfig.delitem();
+							}
+
+							@Override
+							public void onError(Exception e) {
+								sendLocalBroadcast("3", "上传缓存队列数据遇到错误");
+
+							}
+						});
+
+			}
+		}
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -132,7 +162,8 @@ public class ScanWifiService extends Service {
 				// 查询WIFI状态,置标志位
 				if (CheckWifi() == 1) {
 					WifiStatus = 1;
-					sendLocalBroadcast("5", "用户手动打开");
+					sendLocalBroadcast("15", "用户手动打开");
+
 				} else {
 					OpenWifi();
 					WifiStatus = 0;
@@ -161,12 +192,11 @@ public class ScanWifiService extends Service {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			ScanResult result = null;
-
 			Log.v("debug", "收到WIFI广播");
 			int checkintheschool = 1029;
 			wifiList = mainWifi.getScanResults();
 			// 扫描到WIFI后做出判断,上传数据
-			sendLocalBroadcast("4", "扫描到" + wifiList.size() + "个WIFI热点");
+			sendLocalBroadcast("14", "扫描到" + wifiList.size() + "个WIFI热点");
 			for (int i = 0; i < wifiList.size(); i++) {
 				result = wifiList.get(i);
 				intin = wifiin(result.BSSID);
@@ -187,28 +217,38 @@ public class ScanWifiService extends Service {
 						Date curDate = new Date(System.currentTimeMillis());
 						String atttime = formatter.format(curDate);
 
-						String strtvbox = "card=" + card + "&att_time="
-								+ atttime + "&type=0&sch_id=" + schoolid
-								+ "&kind=0&entex_id=1";
+						/*
+						 * String strtvbox = "card=" + card + "&att_time=" +
+						 * atttime + "&type=0&sch_id=" + schoolid +
+						 * "&kind=0&entex_id=1";
+						 */
 
-						myconfig.setatplace("到达: "+ schoolname);
+						myconfig.setatplace("到达: " + schoolname);
 
 						myconfig.setatplacetime(atttime);
-						Log.v("debug","保存位置信息");
-						
-						HttpUtil.sendHttpPostRequest("/tvbox/attends",
-								strtvbox, new HttpCallbackListener() {
-									@Override
-									public void onFinish(String response) {
-										sendLocalBroadcast("2", "上传数据到云端");
-										Log.v("Debug", response);
-									}
+						Log.v("debug", "保存位置信息");
+						Intent iupdate = new Intent(context,
+								UpdateService.class);
+						iupdate.putExtra("datacard", card);
+						iupdate.putExtra("dataatttime", atttime);
+						iupdate.putExtra("dataschoolid", schoolid);
+						iupdate.putExtra("isin", 0);
+						startService(iupdate);
 
-									@Override
-									public void onError(Exception e) {
-										sendLocalBroadcast("3", "上传数据到云端遇到错误");
-									}
-								});
+						/*
+						 * HttpUtil.sendHttpPostRequest("/tvbox/attends",
+						 * strtvbox, new HttpCallbackListener() {
+						 * 
+						 * @Override public void onFinish(String response) {
+						 * sendLocalBroadcast("2", "上传数据到云端"); Log.v("Debug",
+						 * response); }
+						 * 
+						 * @Override public void onError(Exception e) {
+						 * sendLocalBroadcast("3", "上传数据到云端遇到错误");
+						 * 
+						 * 
+						 * } });
+						 */
 
 						status = 4;
 						break;
@@ -234,26 +274,32 @@ public class ScanWifiService extends Service {
 							"yyyy-MM-dd  HH:mm:ss");
 					Date curDate = new Date(System.currentTimeMillis());// 获取当前时间
 					String atttime = formatter.format(curDate);
-					String strtvbox = "card=" + card + "&att_time=" + atttime
-							+ "&type=1&sch_id=" + schoolid
-							+ "&kind=0&entex_id=1";
+					/*
+					 * String strtvbox = "card=" + card + "&att_time=" + atttime
+					 * + "&type=1&sch_id=" + schoolid + "&kind=0&entex_id=1";
+					 */
 
-					myconfig.setatplace("离开: "+schoolname);
+					myconfig.setatplace("离开: " + schoolname);
 					myconfig.setatplacetime(atttime);
-					Log.v("debug","保存位置信息");
-					HttpUtil.sendHttpPostRequest("/tvbox/attends", strtvbox,
-							new HttpCallbackListener() {
-								@Override
-								public void onFinish(String response) {
-									sendLocalBroadcast("2", "上传数据到云端");
-									Log.v("Debug", response);
-								}
+					Log.v("debug", "保存位置信息");
+					Intent iupdate = new Intent(context, UpdateService.class);
+					iupdate.putExtra("datacard", card);
+					iupdate.putExtra("dataatttime", atttime);
+					iupdate.putExtra("dataschoolid", schoolid);
+					iupdate.putExtra("isin", 1);
+					startService(iupdate);
 
-								@Override
-								public void onError(Exception e) {
-									sendLocalBroadcast("3", "上传数据到云端遇到错误");
-								}
-							});
+					/*
+					 * HttpUtil.sendHttpPostRequest("/tvbox/attends", strtvbox,
+					 * new HttpCallbackListener() {
+					 * 
+					 * @Override public void onFinish(String response) {
+					 * sendLocalBroadcast("2", "上传数据到云端"); Log.v("Debug",
+					 * response); }
+					 * 
+					 * @Override public void onError(Exception e) {
+					 * sendLocalBroadcast("3", "上传数据到云端遇到错误"); } });
+					 */
 
 				}
 			}
@@ -268,7 +314,7 @@ public class ScanWifiService extends Service {
 	public void OpenWifi() {
 		if (!mainWifi.isWifiEnabled()) {
 			mainWifi.setWifiEnabled(true);
-			sendLocalBroadcast("5", "小蜗牛自动打开WIFI");
+			sendLocalBroadcast("15", "小蜗牛自动打开WIFI");
 		}
 	}
 
@@ -297,7 +343,7 @@ public class ScanWifiService extends Service {
 	// 关闭WIFI
 	public void CloseWifi() {
 		if (mainWifi.isWifiEnabled()) {
-			sendLocalBroadcast("5", "小蜗牛自动关闭WIFI");
+			sendLocalBroadcast("15", "小蜗牛自动关闭WIFI");
 			mainWifi.setWifiEnabled(false);
 			WifiStatus = 2;
 		}
@@ -323,4 +369,16 @@ public class ScanWifiService extends Service {
 			wakeLock = null;
 		}
 	}
+
+	// 检查网络是否能连通
+	private boolean isNetworkAvailable() {
+		// 得到网络连接信息
+		ConnectivityManager manager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+		// 去进行判断网络是否连接
+		if (manager.getActiveNetworkInfo() != null) {
+			return manager.getActiveNetworkInfo().isAvailable();
+		}
+		return false;
+	}
+
 }
