@@ -16,13 +16,18 @@ public class BootRestartReceiver extends BroadcastReceiver {
 	public void onReceive(Context context, Intent intent) {
 		if (intent.getAction().equals(ACTION1)
 				| intent.getAction().equals(ACTION2)) {
-			Intent startIntent = new Intent(context, ScanWifiService.class);
-			context.startService(startIntent);
+			Log.v("debug", "接收开机或解锁屏幕广播");
+			if (!isServiceRunning(context, "com.boby.snail.itrustoor.ScanWifiService")) {
+				Intent mIntent = new Intent(context, ScanWifiService.class);
+				context.startService(mIntent);
+				Log.v("debug", "服务启动服务"+ScanWifiService.class.getName());
+			}			
 		}
 	}
 
-	public boolean isServiceRunning(String serviceName) {
-		ActivityManager manager = (ActivityManager)getSystemService(Context.ACTIVITY_SERVICE);
+	public boolean isServiceRunning(Context context, String serviceName) {
+		ActivityManager manager = (ActivityManager) context
+				.getSystemService(Context.ACTIVITY_SERVICE);
 		for (RunningServiceInfo service : manager
 				.getRunningServices(Integer.MAX_VALUE)) {
 			if (serviceName.equals(service.service.getClassName())) {

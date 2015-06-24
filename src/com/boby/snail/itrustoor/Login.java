@@ -41,6 +41,7 @@ public class Login extends Activity {
 	private String user_name;
 	private String user_password;
 	private int fam_id;
+	private final String password = "itrustor";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -51,11 +52,11 @@ public class Login extends Activity {
 		String susername = pref.getString("username", "");
 		String spassword = pref.getString("userpassword", "");
 		EditText edtPhone = (EditText) findViewById(R.id.edtphone);
-		EditText edtPassword = (EditText) findViewById(R.id.edtpassword);
+		//EditText edtPassword = (EditText) findViewById(R.id.edtpassword);
 		edtPhone.setText(susername);
-		edtPassword.setText(spassword);
+		//edtPassword.setText(spassword);
 		// 密码，长度要是8的倍数
-		final String password = "itrustor";
+		
 		if (susername != "" && spassword != "") {
 			// 登录
 			dialog = ProgressDialog.show(Login.this, "", "正在登录云端服务器,请稍候");
@@ -64,7 +65,7 @@ public class Login extends Activity {
 			user_name = susername;
 			user_password = spassword;
 			strlogin = "phone=" + user_name + "&password="
-					+ encrypt(user_password, password);
+					+ spassword;
 			HttpUtil.sendHttpPostRequest("/snail/login", strlogin,
 					new HttpCallbackListener() {
 						@Override
@@ -197,7 +198,7 @@ public class Login extends Activity {
 						// 保存数据
 
 						editor.putString("username", user_name);
-						editor.putString("userpassword", user_password);
+						editor.putString("userpassword", encrypt(user_password, password));
 						editor.commit();
 						
 						final Data myconfig = (Data)getApplication();

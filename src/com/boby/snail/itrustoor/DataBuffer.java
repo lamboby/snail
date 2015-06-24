@@ -4,6 +4,13 @@ public class DataBuffer {
 	private String card, atttime;
 	private int schoolid;
 	private int Isin;
+	private int id;
+	public void setid(int sid){
+		this.id=sid;
+	}
+	public int getid(){
+		return id;
+	}
 	public void setcard(String scard){
 		this.card=scard;
 	}

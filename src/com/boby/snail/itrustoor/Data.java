@@ -1,12 +1,12 @@
 package com.boby.snail.itrustoor;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.Application;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
 public class Data extends Application {
 	// wifi扫描频率
@@ -16,8 +16,7 @@ public class Data extends Application {
 	private int id;
 	private String atplace;
 	private String atplacetime;
-
-	private List<DataBuffer> bufferList;
+	private MyDatabase dbHelper;
 
 	public String getatplace() {
 		return atplace;
@@ -119,25 +118,52 @@ public class Data extends Application {
 	}
 
 	public void additem(DataBuffer object) {
-		bufferList.add(object);
+		// bufferList.add(object);
+		SQLiteDatabase db = dbHelper.getWritableDatabase();
+		ContentValues values = new ContentValues();
+		values.put("card", object.getcard());
+		values.put("atttime", object.getatttime());
+		values.put("schoolid", object.getschoolid());
+		values.put("isin", object.getIsin());
+		db.insert("DataBuffer", null, values);
+
 	}
 
 	public DataBuffer getlist() {
-		if (bufferList.size() > 0) {
-			return bufferList.get(0);
-		} else
+		DataBuffer firstdatabuffer = new DataBuffer();
+		SQLiteDatabase db = dbHelper.getWritableDatabase();
+		Cursor cursor = db.query("DataBuffer", null, null, null, null, null,
+				null);
+		if (cursor.getCount() > 0) {
+			cursor.moveToFirst();
+			firstdatabuffer.setatttime(cursor.getString(cursor
+					.getColumnIndex("atttime")));
+			firstdatabuffer.setcard(cursor.getString(cursor
+					.getColumnIndex("card")));
+			firstdatabuffer
+					.setIsin(cursor.getInt(cursor.getColumnIndex("isin")));
+			firstdatabuffer.setschoolid(cursor.getInt(cursor
+					.getColumnIndex("schoolid")));
+			firstdatabuffer.setid(cursor.getInt(cursor.getColumnIndex("id")));
+			return firstdatabuffer;
+		}
+
+		else
 			return null;
 
 	}
-	
-	public int getcount(){
-		return bufferList.size();
+
+	public int getcount() {
+		DataBuffer firstdatabuffer = new DataBuffer();
+		SQLiteDatabase db = dbHelper.getWritableDatabase();
+		Cursor cursor = db.query("DataBuffer", null, null, null, null, null,
+				null);
+		return cursor.getCount();
 	}
 
-	public void delitem() {
-		if (bufferList.size() > 0) {
-			bufferList.remove(0);
-		}
+	public void delitem(int delid) {
+		SQLiteDatabase db = dbHelper.getWritableDatabase();
+		db.delete("DataBuffer", "id=?", new String[] { String.valueOf(delid) });
 	}
 
 	@Override
@@ -149,8 +175,9 @@ public class Data extends Application {
 		atplace = pref.getString("atplace", "");
 		atplacetime = pref.getString("atplacetime", "");
 		id = pref.getInt("id", 0);
-		bufferList = new ArrayList<DataBuffer>();
+		dbHelper = new MyDatabase(this, "Snail.db", null, 1);
+		// dbHelper.getWritableDatabase();
 		super.onCreate();
 	}
 
-}
+};

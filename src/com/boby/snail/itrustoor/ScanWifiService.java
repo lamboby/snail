@@ -125,7 +125,7 @@ public class ScanWifiService extends Service {
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		// 查看缓存中是否有数据,如有数据,检查网络连接,网络连接正常则发送数据到云端
-		DataBuffer buffer;
+		final DataBuffer buffer;
 		buffer = myconfig.getlist();
 		if (buffer != null) {
 			if (isNetworkAvailable()) {
@@ -133,15 +133,14 @@ public class ScanWifiService extends Service {
 						+ buffer.getatttime() + "&type=" + buffer.getIsin()
 						+ "&sch_id=" + buffer.getschoolid()
 						+ "&kind=0&entex_id=1";
-
+               Log.v("debug",strtvbox);
 				HttpUtil.sendHttpPostRequest("/tvbox/attends", strtvbox,
 						new HttpCallbackListener() {
-
 							@Override
 							public void onFinish(String response) {
 								sendLocalBroadcast("2", "上传缓存队列数据成功");
 								Log.v("Debug", response);
-								myconfig.delitem();
+								myconfig.delitem(buffer.getid());
 							}
 
 							@Override
@@ -191,6 +190,7 @@ public class ScanWifiService extends Service {
 	class WifiReceiver extends BroadcastReceiver {
 		@Override
 		public void onReceive(Context context, Intent intent) {
+			if (intent.getAction().equals(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION)){
 			ScanResult result = null;
 			Log.v("debug", "收到WIFI广播");
 			int checkintheschool = 1029;
@@ -307,6 +307,7 @@ public class ScanWifiService extends Service {
 				CloseWifi();
 			}
 
+		}
 		}
 	}
 
