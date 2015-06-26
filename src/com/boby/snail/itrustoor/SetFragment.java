@@ -158,7 +158,7 @@ public class SetFragment extends Fragment {
 				new AlertDialog.Builder(getActivity())
 						.setTitle("请选择")
 						.setIcon(android.R.drawable.ic_dialog_info)
-						.setSingleChoiceItems(items, 0,
+						.setSingleChoiceItems(items,myconfig.getfrequency(),
 								new DialogInterface.OnClickListener() {
 									public void onClick(DialogInterface dialog,
 											int which) {
