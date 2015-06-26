@@ -17,6 +17,26 @@ public class Data extends Application {
 	private String atplace;
 	private String atplacetime;
 	private MyDatabase dbHelper;
+	private boolean disenableScanWifi;
+	private String schoolname;
+	public String getschoolname(){
+		return schoolname;
+	}
+	public void setschoolname(String sschoolname){
+		this.schoolname=sschoolname;
+		SharedPreferences.Editor editor = getSharedPreferences("snail",
+				MODE_PRIVATE).edit();
+		editor.putString("schoolname", sschoolname);
+		editor.commit();
+		
+	}
+    public boolean getdisablescanwifi(){
+    	return disenableScanWifi;
+    }
+    public void setdisablescanwifi(boolean sscanwifi)    
+    {
+    	this.disenableScanWifi=sscanwifi;
+    }
 
 	public String getatplace() {
 		return atplace;
@@ -172,9 +192,11 @@ public class Data extends Application {
 		wififrequency = pref.getInt("wififrequency", 0);
 		wifiinschool = pref.getInt("wifiinschool", -1);
 		familyid = pref.getInt("familyid", -1);
+		schoolname=pref.getString("schoolname", "");
 		atplace = pref.getString("atplace", "");
 		atplacetime = pref.getString("atplacetime", "");
 		id = pref.getInt("id", 0);
+		disenableScanWifi=false;
 		dbHelper = new MyDatabase(this, "Snail.db", null, 1);
 		// dbHelper.getWritableDatabase();
 		super.onCreate();

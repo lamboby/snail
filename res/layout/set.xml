@@ -351,7 +351,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:paddingLeft="10dip"
-                    android:src="@drawable/exit" />
+                    android:src="@drawable/logout" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -359,6 +359,36 @@
                     android:layout_weight="1.0"
                     android:paddingLeft="5dip"
                     android:text=" 注销"
+                    android:textSize="15dp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="10dip"
+                    android:src="@drawable/sl" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/linearExit"
+               	android:layout_width="match_parent"
+                android:layout_height="50dip"
+                android:layout_marginLeft="10dip"
+                android:layout_marginRight="10dip"
+                android:background="@drawable/borderbottom"
+                android:duplicateParentState="true"
+                android:gravity="center_vertical" >
+			 <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="10dip"
+                    android:src="@drawable/exit" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:paddingLeft="5dip"
+                    android:text="  退出"
                     android:textSize="15dp" />
 
                 <ImageView

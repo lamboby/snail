@@ -42,6 +42,7 @@ public class Login extends Activity {
 	private String user_password;
 	private int fam_id;
 	private final String password = "itrustor";
+	private boolean enableSaveLogin=true;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -49,27 +50,26 @@ public class Login extends Activity {
 		setContentView(R.layout.login);
 		Button btnLogin = (Button) findViewById(R.id.btn_login);
 		SharedPreferences pref = getSharedPreferences("snail", MODE_PRIVATE);
-		String susername = pref.getString("username", "");
-		String spassword = pref.getString("userpassword", "");
+		user_name= pref.getString("username", "");
+		user_password= pref.getString("userpassword", "");
 		EditText edtPhone = (EditText) findViewById(R.id.edtphone);
 		//EditText edtPassword = (EditText) findViewById(R.id.edtpassword);
-		edtPhone.setText(susername);
+		edtPhone.setText(user_name);
 		//edtPassword.setText(spassword);
 		// 密码，长度要是8的倍数
 		
-		if (susername != "" && spassword != "") {
+		if (user_name != "" && user_password != "") {
 			// 登录
 			dialog = ProgressDialog.show(Login.this, "", "正在登录云端服务器,请稍候");
 			String strlogin;
 
-			user_name = susername;
-			user_password = spassword;
 			strlogin = "phone=" + user_name + "&password="
-					+ spassword;
+					+ user_password;
 			HttpUtil.sendHttpPostRequest("/snail/login", strlogin,
 					new HttpCallbackListener() {
 						@Override
 						public void onFinish(String response) {
+							enableSaveLogin=false;
 							dialog.dismiss();
 							Message message = new Message();
 							message.what = 1;
@@ -112,6 +112,7 @@ public class Login extends Activity {
 								message.what = 1;
 								message.obj = response.toString();
 								handler.sendMessage(message);
+								enableSaveLogin=true;
 							}
 
 							@Override
@@ -196,11 +197,11 @@ public class Login extends Activity {
 									.setPositiveButton("确定", null).show();
 						}
 						// 保存数据
-
+						if(enableSaveLogin){
 						editor.putString("username", user_name);
 						editor.putString("userpassword", encrypt(user_password, password));
 						editor.commit();
-						
+						}
 						final Data myconfig = (Data)getApplication();
 						myconfig.setfamilyid(fam_id);
 						myconfig.setid(student_id);

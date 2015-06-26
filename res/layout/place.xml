@@ -157,16 +157,16 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:paddingLeft="5dip"
-                    android:text="状态"
+                    android:text="时间"
                     android:textSize="18sp" />
 
                 <TextView
-                    android:id="@+id/wifistatus"
+                    android:id="@+id/scanwifitime"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="3"
                     android:paddingTop="5dip"
-                    android:text="系统控制WIFI开关" />
+                    android:text="" />
 
             </LinearLayout>
 
@@ -182,7 +182,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:paddingLeft="5dip"
-                    android:text="扫描"
+                    android:text="状态"
                     android:textSize="18sp" />
 
                 <TextView

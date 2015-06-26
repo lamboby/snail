@@ -20,7 +20,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
 import android.net.ConnectivityManager;
+import android.net.Uri;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.IBinder;
@@ -41,6 +44,7 @@ public class ScanWifiService extends Service {
 	private int schoolid;
 	private String card, schoolname;
 	public int intheschool;// 学生当前所在学校所属数组
+	private boolean appscanwifi = false;
 	Data myconfig;
 	int[] ifrequency = { 15, 30, 60 };
 	private PowerManager.WakeLock wakeLock = null;
@@ -59,6 +63,12 @@ public class ScanWifiService extends Service {
 		myconfig = (Data) getApplication();
 		String savestring = myconfig.getschool();// 保存的MAC地址与学校对应信息
 		intheschool = myconfig.getinschool(); // 保存的学生当前位置
+		if (intheschool > 0){
+			status = 4;
+			schoolname=myconfig.getschoolname();
+			schoolid=myconfig.getid();
+		}
+
 		JSONArray jsonArray;
 		try {
 			jsonArray = new JSONArray(savestring);
@@ -76,13 +86,11 @@ public class ScanWifiService extends Service {
 				tempwifi.setschoolname(sschoolname);
 				schlist.add(tempwifi);
 			}
-
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		Log.v("debug", "后台服务启动");
-
 		mainWifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
 		localBroadcastManager = LocalBroadcastManager.getInstance(this);
 		receiverWifi = new WifiReceiver();
@@ -90,13 +98,13 @@ public class ScanWifiService extends Service {
 		filter.addAction(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
 		registerReceiver(receiverWifi, filter);// 注册广播
 		sendLocalBroadcast("1", "后台WIFI扫描服务开始运行");
-		acquireWakeLock(this);
+		// acquireWakeLock(this);
 	}
 
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		releaseWakeLock();
+		// releaseWakeLock();
 		Log.v("debug", "后台服务停止");
 		sendLocalBroadcast("1", "后台WIFI扫描服务关闭");
 		unregisterReceiver(receiverWifi);
@@ -127,13 +135,13 @@ public class ScanWifiService extends Service {
 		// 查看缓存中是否有数据,如有数据,检查网络连接,网络连接正常则发送数据到云端
 		final DataBuffer buffer;
 		buffer = myconfig.getlist();
-		if (buffer != null) {
+		if ((buffer != null) && (!myconfig.getdisablescanwifi())) {
 			if (isNetworkAvailable()) {
 				String strtvbox = "card=" + buffer.getcard() + "&att_time="
 						+ buffer.getatttime() + "&type=" + buffer.getIsin()
 						+ "&sch_id=" + buffer.getschoolid()
 						+ "&kind=0&entex_id=1";
-               Log.v("debug",strtvbox);
+				Log.v("debug", strtvbox);
 				HttpUtil.sendHttpPostRequest("/tvbox/attends", strtvbox,
 						new HttpCallbackListener() {
 							@Override
@@ -155,25 +163,18 @@ public class ScanWifiService extends Service {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				Log.v("debug", "定时服务运行");
-				// 服务处理程序
-				// stopSelf();
-				// 查询WIFI状态,置标志位
-				if (CheckWifi() == 1) {
-					WifiStatus = 1;
-					sendLocalBroadcast("15", "用户手动打开");
+				if (!myconfig.getdisablescanwifi()) {
+					Log.v("debug", "定时服务运行");
+					appscanwifi = true;
+					if (CheckWifi() == 1) {
+						WifiStatus = 1;
 
-				} else {
-					OpenWifi();
-					WifiStatus = 0;
+					} else {
+						OpenWifi();
+						WifiStatus = 0;
+					}
+					scanWifi();
 				}
-				// 如WIFI为关,打开WIFI,发送扫描WIFI信息.如果WIFI标志为开,则仅在首次启动时发送扫描WIFI
-				// if (WifiStatus == 0 || once == 0) {
-				// Log.v("关", "查询WIFI状态");
-				scanWifi();
-
-				// }
-
 			}
 		}).start();
 
@@ -190,41 +191,80 @@ public class ScanWifiService extends Service {
 	class WifiReceiver extends BroadcastReceiver {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			if (intent.getAction().equals(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION)){
-			ScanResult result = null;
-			Log.v("debug", "收到WIFI广播");
-			int checkintheschool = 1029;
-			wifiList = mainWifi.getScanResults();
-			// 扫描到WIFI后做出判断,上传数据
-			sendLocalBroadcast("14", "扫描到" + wifiList.size() + "个WIFI热点");
-			for (int i = 0; i < wifiList.size(); i++) {
-				result = wifiList.get(i);
-				intin = wifiin(result.BSSID);
-				if (intin != -1) {
-					// sendLocalBroadcast("1","扫描到培训学校MAC地址");
-					status = 4;
-					checkintheschool = 1023;
-					card = schlist.get(intin).getcard();
-					schoolid = schlist.get(intin).getschid();
-					schoolname = schlist.get(intin).getschoolname();
-					if (schoolid != intheschool) {
-						intheschool = schoolid;
+			if (intent.getAction().equals(
+					WifiManager.SCAN_RESULTS_AVAILABLE_ACTION)
+					&& (appscanwifi)) {
+				ScanResult result = null;
+				appscanwifi = false;
+				Log.v("debug", "收到WIFI广播");
+				// int checkintheschool = 1029;
+				wifiList = mainWifi.getScanResults();
+				// 扫描到WIFI后做出判断,上传数据
+				sendLocalBroadcast("14", "扫描到" + wifiList.size() + "个WIFI热点");
+				for (int i = 0; i < wifiList.size(); i++) {
+					result = wifiList.get(i);
+					intin = wifiin(result.BSSID);
+					if (intin != -1) {
+						// sendLocalBroadcast("1","扫描到培训学校MAC地址");
+						status = 4;
+						// checkintheschool = 1023;
+						card = schlist.get(intin).getcard();
+						schoolid = schlist.get(intin).getschid();
+						schoolname = schlist.get(intin).getschoolname();
+						if (schoolid != intheschool) {
+							intheschool = schoolid;
+							myconfig.setinschool(intheschool);
+							myconfig.setschoolname(schoolname);
+							sendLocalBroadcast("0", "到达 " + schoolname);
+							Uri notification = RingtoneManager
+									.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+							Ringtone r = RingtoneManager.getRingtone(
+									getApplicationContext(), notification);
+							r.play();
+
+							SimpleDateFormat formatter = new SimpleDateFormat(
+									"yyyy-MM-dd  HH:mm:ss");
+							// 获取当前时间
+							Date curDate = new Date(System.currentTimeMillis());
+							String atttime = formatter.format(curDate);
+							myconfig.setatplace("到达: " + schoolname);
+							myconfig.setatplacetime(atttime);
+							Log.v("debug", "保存位置信息");
+							Intent iupdate = new Intent(context,
+									UpdateService.class);
+							iupdate.putExtra("datacard", card);
+							iupdate.putExtra("dataatttime", atttime);
+							iupdate.putExtra("dataschoolid", schoolid);
+							iupdate.putExtra("isin", 0);
+							startService(iupdate);
+							status = 4;
+							break;
+
+						}
+					}
+				}
+
+				/*
+				 * if ((checkintheschool == 1029) && (once == 0)) { intheschool
+				 * = -1; once = 1; Log.v("debug", String.valueOf(once)); }
+				 */
+
+				if (status > 0) {
+					status--;
+					if (status == 0) {
+						sendLocalBroadcast("0", "离开 " + schoolname);
+						Uri notification = RingtoneManager
+								.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+						Ringtone r = RingtoneManager.getRingtone(
+								getApplicationContext(), notification);
+						r.play();
+						intheschool = -1;
 						myconfig.setinschool(intheschool);
-						sendLocalBroadcast("0", "到达 " + schoolname);
 						SimpleDateFormat formatter = new SimpleDateFormat(
 								"yyyy-MM-dd  HH:mm:ss");
-						// 获取当前时间
-						Date curDate = new Date(System.currentTimeMillis());
+						Date curDate = new Date(System.currentTimeMillis());// 获取当前时间
 						String atttime = formatter.format(curDate);
-
-						/*
-						 * String strtvbox = "card=" + card + "&att_time=" +
-						 * atttime + "&type=0&sch_id=" + schoolid +
-						 * "&kind=0&entex_id=1";
-						 */
-
-						myconfig.setatplace("到达: " + schoolname);
-
+						myconfig.setatplace("离开: " + schoolname);
 						myconfig.setatplacetime(atttime);
 						Log.v("debug", "保存位置信息");
 						Intent iupdate = new Intent(context,
@@ -232,82 +272,15 @@ public class ScanWifiService extends Service {
 						iupdate.putExtra("datacard", card);
 						iupdate.putExtra("dataatttime", atttime);
 						iupdate.putExtra("dataschoolid", schoolid);
-						iupdate.putExtra("isin", 0);
+						iupdate.putExtra("isin", 1);
 						startService(iupdate);
-
-						/*
-						 * HttpUtil.sendHttpPostRequest("/tvbox/attends",
-						 * strtvbox, new HttpCallbackListener() {
-						 * 
-						 * @Override public void onFinish(String response) {
-						 * sendLocalBroadcast("2", "上传数据到云端"); Log.v("Debug",
-						 * response); }
-						 * 
-						 * @Override public void onError(Exception e) {
-						 * sendLocalBroadcast("3", "上传数据到云端遇到错误");
-						 * 
-						 * 
-						 * } });
-						 */
-
-						status = 4;
-						break;
-
 					}
 				}
-			}
-
-			if ((checkintheschool == 1029) && (once == 0)) {
-				intheschool = -1;
-				once = 1;
-				Log.v("debug", String.valueOf(once));
-			}
-
-			if (status > 0) {
-				status--;
-				if (status == 0) {
-					sendLocalBroadcast("0", "离开 " + schoolname);
-
-					intheschool = -1;
-					myconfig.setinschool(intheschool);
-					SimpleDateFormat formatter = new SimpleDateFormat(
-							"yyyy-MM-dd  HH:mm:ss");
-					Date curDate = new Date(System.currentTimeMillis());// 获取当前时间
-					String atttime = formatter.format(curDate);
-					/*
-					 * String strtvbox = "card=" + card + "&att_time=" + atttime
-					 * + "&type=1&sch_id=" + schoolid + "&kind=0&entex_id=1";
-					 */
-
-					myconfig.setatplace("离开: " + schoolname);
-					myconfig.setatplacetime(atttime);
-					Log.v("debug", "保存位置信息");
-					Intent iupdate = new Intent(context, UpdateService.class);
-					iupdate.putExtra("datacard", card);
-					iupdate.putExtra("dataatttime", atttime);
-					iupdate.putExtra("dataschoolid", schoolid);
-					iupdate.putExtra("isin", 1);
-					startService(iupdate);
-
-					/*
-					 * HttpUtil.sendHttpPostRequest("/tvbox/attends", strtvbox,
-					 * new HttpCallbackListener() {
-					 * 
-					 * @Override public void onFinish(String response) {
-					 * sendLocalBroadcast("2", "上传数据到云端"); Log.v("Debug",
-					 * response); }
-					 * 
-					 * @Override public void onError(Exception e) {
-					 * sendLocalBroadcast("3", "上传数据到云端遇到错误"); } });
-					 */
-
+				if (WifiStatus == 0) {
+					CloseWifi();
 				}
-			}
-			if (WifiStatus == 0) {
-				CloseWifi();
-			}
 
-		}
+			}
 		}
 	}
 
@@ -315,7 +288,7 @@ public class ScanWifiService extends Service {
 	public void OpenWifi() {
 		if (!mainWifi.isWifiEnabled()) {
 			mainWifi.setWifiEnabled(true);
-			sendLocalBroadcast("15", "小蜗牛自动打开WIFI");
+
 		}
 	}
 
@@ -344,32 +317,24 @@ public class ScanWifiService extends Service {
 	// 关闭WIFI
 	public void CloseWifi() {
 		if (mainWifi.isWifiEnabled()) {
-			sendLocalBroadcast("15", "小蜗牛自动关闭WIFI");
+
 			mainWifi.setWifiEnabled(false);
 			WifiStatus = 2;
 		}
 	}
 
-	// 获取锁
-	public void acquireWakeLock(Context context) {
-		if (wakeLock == null) {
-			PowerManager powerManager = (PowerManager) (context
-					.getSystemService(Context.POWER_SERVICE));
-			wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK
-					| PowerManager.ON_AFTER_RELEASE, "My Tag");
-			wakeLock.acquire();
-			// PowerManager.PARTIAL_WAKE_LOCK|PowerManager.ON_AFTER_RELEASE
-			// PowerManager.SCREEN_DIM_WAKE_LOCK
-		}
-	}
-
-	// 释放锁
-	public void releaseWakeLock() {
-		if (wakeLock != null && wakeLock.isHeld()) {
-			wakeLock.release();
-			wakeLock = null;
-		}
-	}
+	/*
+	 * // 获取锁 public void acquireWakeLock(Context context) { if (wakeLock ==
+	 * null) { PowerManager powerManager = (PowerManager) (context
+	 * .getSystemService(Context.POWER_SERVICE)); wakeLock =
+	 * powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK |
+	 * PowerManager.ON_AFTER_RELEASE, "My Tag"); wakeLock.acquire(); //
+	 * PowerManager.PARTIAL_WAKE_LOCK|PowerManager.ON_AFTER_RELEASE //
+	 * PowerManager.SCREEN_DIM_WAKE_LOCK } }
+	 * 
+	 * // 释放锁 public void releaseWakeLock() { if (wakeLock != null &&
+	 * wakeLock.isHeld()) { wakeLock.release(); wakeLock = null; } }
+	 */
 
 	// 检查网络是否能连通
 	private boolean isNetworkAvailable() {

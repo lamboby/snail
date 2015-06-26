@@ -23,6 +23,8 @@ public class UpdateService extends Service {
 	private ConnectivityManager mCM;
 	private WifiManager mainWifi;
 	private Data myconfig;
+	private boolean changewifi = false;
+	private boolean change3G = false;
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -44,74 +46,20 @@ public class UpdateService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-
 		atttime = intent.getStringExtra("dataatttime");
 		card = intent.getStringExtra("datacard");
 		schoolid = intent.getIntExtra("dataschoolid", 0);
 		Isin = intent.getIntExtra("isin", 1);
+		final String strtvbox = "card=" + card + "&att_time=" + atttime
+				+ "&type=" + Isin + "&sch_id=" + schoolid
+				+ "&kind=0&entex_id=1";
 
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
 				localBroadcastManager = LocalBroadcastManager
 						.getInstance(getApplicationContext());
-				String strtvbox = "card=" + card + "&att_time=" + atttime
-						+ "&type=" + Isin + "&sch_id=" + schoolid
-						+ "&kind=0&entex_id=1";
-				HttpUtil.sendHttpPostRequest("/tvbox/attends", strtvbox,
-						new HttpCallbackListener() {
-							@Override
-							public void onFinish(String response) {
-								sendLocalBroadcast("2", "上传数据到云端");
-								Log.v("Debug", response);
-								stopSelf();
-							}
-
-							@Override
-							public void onError(Exception e) {
-								// boolean wifichange=false;
-
-								sendLocalBroadcast("3", "上传数据到云端遇到错误");
-								if (!check3G()) {
-									// 关闭WIFI
-									open3G();
-									String strtvbox = "card=" + card
-											+ "&att_time=" + atttime + "&type="
-											+ Isin + "&sch_id=" + schoolid
-											+ "&kind=0&entex_id=1";
-									HttpUtil.sendHttpPostRequest(
-											"/tvbox/attends", strtvbox,
-											new HttpCallbackListener() {
-												@Override
-												public void onFinish(
-														String response) {
-													sendLocalBroadcast("2",
-															"再次上传数据到云端成功");
-													Log.v("Debug", response);
-													close3G();
-													stopSelf();
-
-												}
-
-												@Override
-												public void onError(Exception e) {
-													close3G();
-													sendLocalBroadcast("3",
-															"再次上传数据到云端遇到错误");
-													// 添加数据到缓存
-													DataBuffer errdata = new DataBuffer();
-													errdata.setatttime(atttime);
-													errdata.setIsin(Isin);
-													errdata.setcard(card);
-													errdata.setschoolid(schoolid);
-													myconfig.additem(errdata);
-												}
-											});
-
-								}
-							}
-						});
-
+				UpdataToIcloud(0, strtvbox);
 			}
 		}).start();
 		return super.onStartCommand(intent, flags, startId);
@@ -155,7 +103,6 @@ public class UpdateService extends Service {
 			if (!isMobileDataEnable) {
 				invokeBooleanArgMethod("setMobileDataEnabled", true);
 				sendLocalBroadcast("4", "尝试打开数据流量");
-				Thread.currentThread().sleep(4000); // 延时4秒
 
 			}
 		} catch (Exception e) {
@@ -240,4 +187,90 @@ public class UpdateService extends Service {
 		}
 	}
 
+	// 上传数据到服务器
+	public void UpdataToIcloud(final int i, final String strt) {
+		// int[] delays= { 5000, 10000, 45000 };
+		myconfig.setdisablescanwifi(true);
+		if (i == 0) {
+			if (CheckWifi()) {
+				//延迟15秒发送,防止WIFI未连接
+				myconfig.setdisablescanwifi(true);
+				changewifi = false;
+				change3G = false;
+				Thread.currentThread();
+				try {
+					Thread.sleep(15000);
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
+			}
+
+		} else if (i == 1) {
+			// 关闭扫描,关闭WIFI
+			if (CheckWifi()) {
+				CloseWifi();
+				changewifi = true;
+			}
+			if (!check3G()) {
+				open3G();
+				change3G = true;
+			}
+		}
+		Log.v("debug", "延时前" + String.valueOf(i));
+		if (i > 0) {
+			try {
+				Thread.currentThread();
+				Thread.sleep(15000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		Log.v("debug", "延时后发送数据" + String.valueOf(i));
+		HttpUtil.sendHttpPostRequest("/tvbox/attends", strt,
+				new HttpCallbackListener() {
+					@Override
+					public void onFinish(String response) {
+						sendLocalBroadcast("2", "完成上传数据到云端服务器");
+						Log.v("Debug", response);
+						if (changewifi)
+							OpenWifi();
+						if (change3G)
+							close3G();
+						changewifi = false;
+						change3G = false;
+						myconfig.setdisablescanwifi(false);
+						stopSelf();
+					}
+
+					@Override
+					public void onError(Exception e) {
+						sendLocalBroadcast("3", "第" + String.valueOf(i + 1)
+								+ "次上传数据到云端服务器失败");
+						if (i == 0)
+							UpdataToIcloud(1, strt);
+						else if (i == 1) {
+							UpdataToIcloud(2, strt);
+						} else if (i == 2) {
+							UpdataToIcloud(3, strt);
+						} else if (i == 3) {
+							if (changewifi)
+								OpenWifi();
+							if (change3G)
+								close3G();
+							changewifi = false;
+							change3G = false;
+							myconfig.setdisablescanwifi(false);
+
+							// 添加数据到缓存
+							DataBuffer errdata = new DataBuffer();
+							errdata.setatttime(atttime);
+							errdata.setIsin(Isin);
+							errdata.setcard(card);
+							errdata.setschoolid(schoolid);
+							myconfig.additem(errdata);
+							stopSelf();
+						}
+					}
+				});
+	}
 }

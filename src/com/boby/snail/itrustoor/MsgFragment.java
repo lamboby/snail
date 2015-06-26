@@ -71,13 +71,13 @@ public class MsgFragment<User> extends ListFragment {
 					R.id.atschooltime);
 			TextView viewWifiscan = (TextView) getActivity().findViewById(
 					R.id.wifiscan);
-			TextView viewWifistatus = (TextView) getActivity().findViewById(
-					R.id.wifistatus);
+			TextView viewScanWifiTime = (TextView) getActivity().findViewById(
+					R.id.scanwifitime);
 
 			if (intent.getStringExtra("Type") == "14") {
-				viewWifiscan.setText(atttime + intent.getStringExtra("Value"));
-			} else if (intent.getStringExtra("Type") == "15") {
-				viewWifistatus.setText(atttime + intent.getStringExtra("Value"));
+				viewWifiscan.setText(intent.getStringExtra("Value"));
+			 
+				viewScanWifiTime.setText(atttime);
 			} else {
 				if (intent.getStringExtra("Type") == "0") {
 							
@@ -131,7 +131,7 @@ public class MsgFragment<User> extends ListFragment {
 		listItems.add(listItem);
 		// }
 		adapter = new SimpleAdapter(getActivity(), listItems, R.layout.user,
-				new String[] { "values", "values2", "images" }, new int[] {
+				new String[] { "values2", "values", "images" }, new int[] {
 						R.id.cn_word, R.id.en_word, R.id.animal });
 
 		setListAdapter(adapter);

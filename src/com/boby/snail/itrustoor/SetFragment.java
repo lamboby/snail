@@ -36,7 +36,7 @@ import android.widget.Toast;
 public class SetFragment extends Fragment {
 	private Dialog dialog;
 	private LinearLayout linearscanbarcode, linearlogout, linearsync,
-			linearfrequency;
+			linearfrequency, linearexit;
 	int sfamilyid;
 	int sstudentid;
 	Data myconfig;
@@ -67,24 +67,27 @@ public class SetFragment extends Fragment {
 		linearsync = (LinearLayout) getActivity().findViewById(R.id.linearSync);
 		linearsync.setOnClickListener(onclicklistener);
 
+		linearexit = (LinearLayout) getActivity().findViewById(R.id.linearExit);
+		linearexit.setOnClickListener(onclicklistener);
+
 		sfamilyid = myconfig.getfamilyid();
 		sstudentid = myconfig.getid();
-		TextView frequency = (TextView) getActivity()
-				.findViewById(R.id.frequency);
-		switch (myconfig.getfrequency()){
-     	case 0:
-     		frequency.setText("快(15秒)");
-     		break;
-     	case 1:
-     		frequency.setText("中(30秒)");
-     		break;
-     	case 2:
-     		frequency.setText("慢(60秒)");
-     		break;
-     	default:
-     		break;
-     	}
-	
+		TextView frequency = (TextView) getActivity().findViewById(
+				R.id.frequency);
+		switch (myconfig.getfrequency()) {
+		case 0:
+			frequency.setText("快(15秒)");
+			break;
+		case 1:
+			frequency.setText("中(30秒)");
+			break;
+		case 2:
+			frequency.setText("慢(60秒)");
+			break;
+		default:
+			break;
+		}
+
 	}
 
 	@Override
@@ -102,18 +105,21 @@ public class SetFragment extends Fragment {
 				String schoolid = scanResult.substring(
 						scanResult.indexOf("<sid>") + 5,
 						scanResult.indexOf("</sid>"));
-				Log.v("debug","sch_id=" + schoolid + "&stu_id=" +  String.valueOf(sstudentid)
-						+ "&fml_id=" +  String.valueOf(sfamilyid) + "&card=" +  String.valueOf(sstudentid)
-						+ schoolid);
+				Log.v("debug",
+						"sch_id=" + schoolid + "&stu_id="
+								+ String.valueOf(sstudentid) + "&fml_id="
+								+ String.valueOf(sfamilyid) + "&card="
+								+ String.valueOf(sstudentid) + schoolid);
 				// 绑定二维码
-				bindcard("sch_id=" + schoolid + "&stu_id=" +  String.valueOf(sstudentid)
-						+ "&fml_id=" +  String.valueOf(sfamilyid) + "&card=" +  String.valueOf(sstudentid)
-						+"_"+ schoolid);
-				
+				bindcard("sch_id=" + schoolid + "&stu_id="
+						+ String.valueOf(sstudentid) + "&fml_id="
+						+ String.valueOf(sfamilyid) + "&card="
+						+ String.valueOf(sstudentid) + "_" + schoolid);
+
 			} else {
 				new AlertDialog.Builder(getActivity()).setTitle("提示")
-				.setMessage("向服务器提交绑定请求产生错误,返回信息:"+scanResult)
-				.setPositiveButton("确定", null).show();
+						.setMessage("向服务器提交绑定请求产生错误,返回信息:" + scanResult)
+						.setPositiveButton("确定", null).show();
 			}
 		}
 	}
@@ -128,16 +134,34 @@ public class SetFragment extends Fragment {
 						CaptureActivity.class);
 				startActivityForResult(openCameraIntent, 0);
 				break;
-			case R.id.linearLogout:
+			case R.id.linearExit:
 				new AlertDialog.Builder(getActivity())
 						.setTitle("确认")
-						.setMessage("确定要注销?")
+						.setMessage("确定要退出程序?")
+						.setPositiveButton("确定",
+								new DialogInterface.OnClickListener() {
+									public void onClick(DialogInterface dialog,
+											int whichButton) {
+										stopservice();
+										getActivity().finish();
+										
+									
+									}
+
+								}).setNegativeButton("取消", null).show();
+				break;
+				
+			case R.id.linearLogout:
+				new AlertDialog.Builder(getActivity())
+						.setTitle("退出当前帐号")
+						.setMessage("确定要切换登录帐号?")
 						.setPositiveButton("确定",
 								new DialogInterface.OnClickListener() {
 									public void onClick(DialogInterface dialog,
 											int whichButton) {
 										stopservice();
 										myconfig.logout();// 提交修改
+										getActivity().finish();
 										Intent intent = new Intent(
 												getActivity(), Login.class);
 										startActivity(intent);
@@ -158,7 +182,7 @@ public class SetFragment extends Fragment {
 				new AlertDialog.Builder(getActivity())
 						.setTitle("请选择")
 						.setIcon(android.R.drawable.ic_dialog_info)
-						.setSingleChoiceItems(items,myconfig.getfrequency(),
+						.setSingleChoiceItems(items, myconfig.getfrequency(),
 								new DialogInterface.OnClickListener() {
 									public void onClick(DialogInterface dialog,
 											int which) {
@@ -246,12 +270,13 @@ public class SetFragment extends Fragment {
 					}
 				});
 	};
+
 	public void startservice() {
-		Intent startIntent = new Intent(getActivity(),
-				ScanWifiService.class);
+		Intent startIntent = new Intent(getActivity(), ScanWifiService.class);
 		getActivity().startService(startIntent);
-		
+
 	}
+
 	// 接收程序消息
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
@@ -265,7 +290,7 @@ public class SetFragment extends Fragment {
 					switch (msg.what) {
 					case 1:
 						// 绑定完成.
-						sync("stu_id=" +  String.valueOf(sstudentid));
+						sync("stu_id=" + String.valueOf(sstudentid));
 						Log.v("debug", String.valueOf(sstudentid));
 						break;
 					case 2:
@@ -307,7 +332,7 @@ public class SetFragment extends Fragment {
 									stulist.add(stu);
 								}
 							}
-							String strschool="";
+							String strschool = "";
 							String school = "[";
 							for (int i = 0; i < stulist.size(); i++) {
 								school = school + "{\"schid\":" + "\""
@@ -321,30 +346,35 @@ public class SetFragment extends Fragment {
 										+ "\"}";
 								if (i != stulist.size() - 1)
 									school = school + ",";
-								
-								strschool =strschool+"["+stulist.get(i).getschoolname()+"]";								 
+
+								strschool = strschool + "["
+										+ stulist.get(i).getschoolname() + "]";
 							}
 							school = school + "]";
 							myconfig.setschool(school);
-							
-							TextView bindbarcode=(TextView)getActivity().findViewById(R.id.bindbarcode);
-					     	
-					     	List<Wifilist> schlist = new ArrayList<Wifilist>();
-					     	 
-					      
-							bindbarcode.setText(strschool);
-							
-							
-							new AlertDialog.Builder(getActivity()).setTitle("提示")
-							.setMessage("数据同步完成")
-							.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int whichButton) {
-									stopservice();
-									startservice();
-								}
 
-							}) .show();;
+							TextView bindbarcode = (TextView) getActivity()
+									.findViewById(R.id.bindbarcode);
+
+							List<Wifilist> schlist = new ArrayList<Wifilist>();
+
+							bindbarcode.setText(strschool);
+
+							new AlertDialog.Builder(getActivity())
+									.setTitle("提示")
+									.setMessage("数据同步完成")
+									.setPositiveButton(
+											"确定",
+											new DialogInterface.OnClickListener() {
+												public void onClick(
+														DialogInterface dialog,
+														int whichButton) {
+													stopservice();
+													startservice();
+												}
+
+											}).show();
+							;
 						} else {
 							Toast.makeText(getActivity(), "云端学校信息为空,同步失败", 0)
 									.show();
