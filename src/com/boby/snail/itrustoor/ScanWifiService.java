@@ -61,6 +61,7 @@ public class ScanWifiService extends Service {
 				pendingIntent);
 		startForeground(1, notification);
 		myconfig = (Data) getApplication();
+		myconfig.setenablestartservice(true);
 		String savestring = myconfig.getschool();// 保存的MAC地址与学校对应信息
 		intheschool = myconfig.getinschool(); // 保存的学生当前位置
 		if (intheschool > 0){

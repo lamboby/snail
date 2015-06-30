@@ -42,7 +42,7 @@ public class Login extends Activity {
 	private String user_password;
 	private int fam_id;
 	private final String password = "itrustor";
-	private boolean enableSaveLogin=true;
+	private boolean enableSaveLogin = true;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -50,41 +50,41 @@ public class Login extends Activity {
 		setContentView(R.layout.login);
 		Button btnLogin = (Button) findViewById(R.id.btn_login);
 		SharedPreferences pref = getSharedPreferences("snail", MODE_PRIVATE);
-		user_name= pref.getString("username", "");
-		user_password= pref.getString("userpassword", "");
+		user_name = pref.getString("username", "");
+		user_password = pref.getString("userpassword", "");
 		EditText edtPhone = (EditText) findViewById(R.id.edtphone);
-		//EditText edtPassword = (EditText) findViewById(R.id.edtpassword);
+		// EditText edtPassword = (EditText) findViewById(R.id.edtpassword);
 		edtPhone.setText(user_name);
-		//edtPassword.setText(spassword);
+		// edtPassword.setText(spassword);
 		// 密码，长度要是8的倍数
-		
 		if (user_name != "" && user_password != "") {
 			// 登录
 			dialog = ProgressDialog.show(Login.this, "", "正在登录云端服务器,请稍候");
 			String strlogin;
-
-			strlogin = "phone=" + user_name + "&password="
-					+ user_password;
+			strlogin = "phone=" + user_name + "&password=" + user_password;
 			HttpUtil.sendHttpPostRequest("/snail/login", strlogin,
 					new HttpCallbackListener() {
 						@Override
 						public void onFinish(String response) {
-							enableSaveLogin=false;
+							enableSaveLogin = false;
 							dialog.dismiss();
 							Message message = new Message();
 							message.what = 1;
 							message.obj = response.toString();
+							Log.v("res",response.toString());
 							handler.sendMessage(message);
 						}
 
 						@Override
 						public void onError(Exception e) {
-							Looper.prepare();
-							dialog.dismiss();
-							new AlertDialog.Builder(Login.this).setTitle("退出")
-									.setMessage("登录失败,请检查网络设置或联系客服!")
-									.setPositiveButton("确定", null).show();
-							Looper.loop();
+							// 登录错误,直接进入主界面
+							Log.v("debug","登录失败");
+							Intent intent = new Intent(Login.this,
+									MainActivity.class);
+							startActivity(intent);
+							overridePendingTransition(R.anim.slide_in_right,
+									R.anim.slide_out_left);
+							finish();
 						}
 					});
 
@@ -112,7 +112,7 @@ public class Login extends Activity {
 								message.what = 1;
 								message.obj = response.toString();
 								handler.sendMessage(message);
-								enableSaveLogin=true;
+								enableSaveLogin = true;
 							}
 
 							@Override
@@ -147,7 +147,8 @@ public class Login extends Activity {
 						// 登录完成,开始同步数据.
 						jsonArray = new JSONObject(response)
 								.getJSONArray("Data");
-						student_id =jsonArray.getJSONObject(0).getInt("stu_id");
+						student_id = jsonArray.getJSONObject(0)
+								.getInt("stu_id");
 						jsonArray = jsonArray.getJSONObject(0).getJSONArray(
 								"families");
 						for (int i = 0; i < jsonArray.length(); i++) {
@@ -197,12 +198,13 @@ public class Login extends Activity {
 									.setPositiveButton("确定", null).show();
 						}
 						// 保存数据
-						if(enableSaveLogin){
-						editor.putString("username", user_name);
-						editor.putString("userpassword", encrypt(user_password, password));
-						editor.commit();
+						if (enableSaveLogin) {
+							editor.putString("username", user_name);
+							editor.putString("userpassword",
+									encrypt(user_password, password));
+							editor.commit();
 						}
-						final Data myconfig = (Data)getApplication();
+						final Data myconfig = (Data) getApplication();
 						myconfig.setfamilyid(fam_id);
 						myconfig.setid(student_id);
 						break;

@@ -268,6 +268,14 @@
                     android:paddingLeft="5dip"
                     android:text="  关于"
                     android:textSize="15dp" />
+                  <TextView
+                    android:id="@+id/txtversion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="5dip"
+                    android:text=" V1.0.1"
+                    android:textColor="#b0b0b0"
+                    android:textSize="15dp" />
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -358,7 +366,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1.0"
                     android:paddingLeft="5dip"
-                    android:text=" 注销"
+                    android:text="  注销"
                     android:textSize="15dp" />
 
                 <ImageView

@@ -143,7 +143,9 @@ public class SetFragment extends Fragment {
 									public void onClick(DialogInterface dialog,
 											int whichButton) {
 										stopservice();
+										myconfig.setenablestartservice(false);
 										getActivity().finish();
+										
 										
 									
 									}
@@ -161,6 +163,7 @@ public class SetFragment extends Fragment {
 											int whichButton) {
 										stopservice();
 										myconfig.logout();// 提交修改
+										myconfig.setenablestartservice(false);
 										getActivity().finish();
 										Intent intent = new Intent(
 												getActivity(), Login.class);

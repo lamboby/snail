@@ -31,6 +31,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		initViews();
+		Log.v("debug","主窗体建立");
 		fragmentManager = getSupportFragmentManager();
 		if (savedInstanceState == null) {
 			setTabSelection(0);

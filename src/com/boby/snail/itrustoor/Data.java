@@ -19,6 +19,19 @@ public class Data extends Application {
 	private MyDatabase dbHelper;
 	private boolean disenableScanWifi;
 	private String schoolname;
+	public void setenablestartservice(boolean sstart){
+		SharedPreferences.Editor editor = getSharedPreferences("snail",
+				MODE_PRIVATE).edit();
+		editor.putBoolean("startservice", sstart);
+		editor.commit();
+		
+	}
+	public Boolean getenablestartservice()
+	{
+		SharedPreferences pref = getSharedPreferences("snail", MODE_PRIVATE);
+		return pref.getBoolean("startservice", true);
+		
+	}
 	public String getschoolname(){
 		return schoolname;
 	}
