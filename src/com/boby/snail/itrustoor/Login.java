@@ -71,14 +71,14 @@ public class Login extends Activity {
 							Message message = new Message();
 							message.what = 1;
 							message.obj = response.toString();
-							Log.v("res",response.toString());
+							Log.v("res", response.toString());
 							handler.sendMessage(message);
 						}
 
 						@Override
 						public void onError(Exception e) {
 							// 登录错误,直接进入主界面
-							Log.v("debug","登录失败");
+							Log.v("debug", "登录失败");
 							Intent intent = new Intent(Login.this,
 									MainActivity.class);
 							startActivity(intent);
@@ -87,7 +87,6 @@ public class Login extends Activity {
 							finish();
 						}
 					});
-
 		}
 
 		// 用户登录
@@ -299,10 +298,24 @@ public class Login extends Activity {
 					}
 				} else {
 					// 如果返回码不等于0
+					String reserr = "";
+					switch (resObject.getInt("Code")) {
+					case 1100:
+						reserr = "数据库处理错误";
+						break;
+					case 1009:
+						reserr = "参数错误";
+						break;
+					default:
+						Log.v("Debug", String.valueOf(resObject.getInt("Code")));
+						reserr = resObject.getString("Msg");
+						break;
+					}
+
 					new AlertDialog.Builder(Login.this)
 							.setTitle("返回错误码:" + resObject.getString("Code"))
-							.setMessage(resObject.getString("Msg"))
-							.setPositiveButton("确定", null).show();
+							.setMessage(reserr).setPositiveButton("确定", null)
+							.show();
 				}
 			} catch (Exception e) {
 				Log.i("debug", e.getMessage());

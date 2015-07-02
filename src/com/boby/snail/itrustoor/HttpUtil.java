@@ -8,11 +8,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class HttpUtil {
-	static String serverUrl = "http://test.itrustoor.com:8080/api";
-
+	//static String serverUrl = "http://test.itrustoor.com:8080/api";
+	static String serverUrl = "http://192.168.168.200:8080/api";
 	public interface HttpCallbackListener {
 		void onFinish(String response);
-
 		void onError(Exception e);
 	}
 
