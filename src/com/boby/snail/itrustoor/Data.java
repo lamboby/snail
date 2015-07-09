@@ -80,7 +80,10 @@ public class Data extends Application {
 		SharedPreferences pref = getSharedPreferences("snail", MODE_PRIVATE);
 		return pref.getString("school", "");
 	}
-
+	public String getwifi() {
+		SharedPreferences pref = getSharedPreferences("snail", MODE_PRIVATE);
+		return pref.getString("wifi", "");
+	}
 	public void logout() {
 		SharedPreferences sharedPreferences = getSharedPreferences("snail",
 				Context.MODE_PRIVATE);
@@ -98,6 +101,13 @@ public class Data extends Application {
 		SharedPreferences.Editor editor = getSharedPreferences("snail",
 				MODE_PRIVATE).edit();
 		editor.putString("school", sschool);
+		editor.commit();
+	}
+	
+	public void setwifi(String sschool) {
+		SharedPreferences.Editor editor = getSharedPreferences("snail",
+				MODE_PRIVATE).edit();
+		editor.putString("wifi", sschool);
 		editor.commit();
 	}
 

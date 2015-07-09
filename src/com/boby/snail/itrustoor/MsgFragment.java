@@ -61,7 +61,7 @@ public class MsgFragment<User> extends ListFragment {
 
 			
 			SimpleDateFormat formatter = new SimpleDateFormat(
-					"yyyy-MM-dd  HH:mm:ss");
+					"HH:mm:ss");
 			Date curDate = new Date(System.currentTimeMillis());// 获取当前时间
 			String atttime = formatter.format(curDate);
 
@@ -71,13 +71,11 @@ public class MsgFragment<User> extends ListFragment {
 					R.id.atschooltime);
 			TextView viewWifiscan = (TextView) getActivity().findViewById(
 					R.id.wifiscan);
-			TextView viewScanWifiTime = (TextView) getActivity().findViewById(
-					R.id.scanwifitime);
+
 
 			if (intent.getStringExtra("Type") == "14") {
-				viewWifiscan.setText(intent.getStringExtra("Value"));
-			 
-				viewScanWifiTime.setText(atttime);
+				viewWifiscan.setText(atttime+intent.getStringExtra("Value"));
+
 			} else {
 				if (intent.getStringExtra("Type") == "0") {
 							

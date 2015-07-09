@@ -2,6 +2,7 @@ package com.boby.snail.itrustoor;
 
 import com.boby.snail.itrustoor.R;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -30,6 +31,11 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
+		SysApplication.getInstance().addActivity(this); 
+		// ActionBar actionBar = getSupportActionBar();
+		//    actionBar.setDisplayHomeAsUpEnabled(true);
+
+		
 		initViews();
 		Log.v("debug","主窗体建立");
 		fragmentManager = getSupportFragmentManager();

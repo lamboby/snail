@@ -14,7 +14,7 @@
             android:orientation="vertical" >
 
             <LinearLayout
-                android:id="@+id/linearScanbarcode"
+                android:id="@+id/linearScanWifi"
                 android:layout_width="match_parent"
                 android:layout_height="50dip"
                 android:layout_marginLeft="10dip"
@@ -29,37 +29,6 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:paddingLeft="10dip"
-                    android:src="@drawable/qrcode" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1.0"
-                    android:paddingLeft="5dip"
-                    android:text="  扫描培训机构二维码"
-                    android:textSize="15dp" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingRight="10dip"
-                    android:src="@drawable/into" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dip"
-                android:layout_marginLeft="10dip"
-                android:layout_marginRight="10dip"
-                android:background="@drawable/borderbottom"
-                android:duplicateParentState="true"
-                android:gravity="center_vertical" >
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="10dip"
                     android:src="@drawable/home" />
 
                 <TextView
@@ -67,7 +36,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1.0"
                     android:paddingLeft="5dip"
-                    android:text="  归家配置"
+                    android:text="  扫描WIFI"
                     android:textSize="15dp" />
 
                 <ImageView
@@ -78,7 +47,40 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/linearSync"
+                 android:id="@+id/linearScanbarcode"
+                android:layout_width="match_parent"
+                android:layout_height="50dip"
+                android:layout_marginLeft="10dip"
+                android:layout_marginRight="10dip"
+                android:background="@drawable/borderbottom"
+                android:clickable="true" 
+                android:visibility="gone" 
+                android:gravity="center_vertical" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="10dip"
+                    android:src="@drawable/qrcode" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:paddingLeft="5dip"
+                    android:text="  扫描二维码"
+                    android:textSize="15dp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="10dip"
+                    android:src="@drawable/into" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearSetPos"
                 android:layout_width="match_parent"
                 android:layout_height="50dip"
                 android:layout_marginLeft="10dip"
@@ -100,7 +102,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1.0"
                     android:paddingLeft="5dip"
-                    android:text="  同步云端蜗牛点"
+                    android:text="  管理WIFI定位点"
                     android:textSize="15dp" />
 
                 <ImageView
@@ -109,14 +111,15 @@
                     android:paddingRight="10dip"
                     android:src="@drawable/into" />
             </LinearLayout>
-
+            
             <LinearLayout
-                android:id="@+id/linearFrequency"
+                android:id="@+id/linearConfigLan"
                 android:layout_width="match_parent"
                 android:layout_height="50dip"
                 android:layout_marginLeft="10dip"
                 android:layout_marginRight="10dip"
-                android:background="@drawable/borderbottom"
+                android:layout_marginTop="10dip"
+                android:background="@drawable/bordertop"
                 android:clickable="true"
                 android:gravity="center_vertical" >
 
@@ -132,15 +135,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1.0"
                     android:paddingLeft="5dip"
-                    android:text="  感应频率"
-                    android:textSize="15dp" />
-                <TextView
-                    android:id="@+id/frequency"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingRight="5dip"
-                    android:text=" 快(30秒)"
-                    android:textColor="#b0b0b0"
+                    android:text="  网络配置"
                     android:textSize="15dp" />
 
                 <ImageView
@@ -150,115 +145,23 @@
                     android:src="@drawable/into" />
             </LinearLayout>
 
-            <LinearLayout
-            
-                android:layout_width="match_parent"
-                android:layout_height="50dip"
-                android:layout_marginLeft="10dip"
-                android:layout_marginRight="10dip"
-                android:layout_marginTop="10dip"
-                android:background="@drawable/bordertop"
-                android:duplicateParentState="true"
-                android:gravity="center_vertical" >
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="10dip"
-                    android:src="@drawable/traffic" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1.0"
-                    android:paddingLeft="5dip"
-                    android:text="  数据流量权限"
-                    android:textSize="15dp" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingRight="10dip"
-                    android:src="@drawable/select" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dip"
-                android:layout_marginLeft="10dip"
-                android:layout_marginRight="10dip"
-                android:background="@drawable/borderbottom"
-                android:duplicateParentState="true"
-                android:gravity="center_vertical" >
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="10dip"
-                    android:src="@drawable/wifi" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1.0"
-                    android:paddingLeft="5dip"
-                    android:text="  WIFI权限"
-                    android:textSize="15dp" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingRight="10dip"
-                    android:src="@drawable/select" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dip"
-                android:layout_marginLeft="10dip"
-                android:layout_marginRight="10dip"
-                android:background="@drawable/borderbottom"
-                android:duplicateParentState="true"
-                android:gravity="center_vertical" >
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="10dip"
-                    android:src="@drawable/message" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1.0"
-                    android:paddingLeft="5dip"
-                    android:text="  发送短信"
-                    android:textSize="15dp" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingRight="10dip"
-                    android:src="@drawable/unselect" />
-            </LinearLayout>
 			<LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dip"
-                android:layout_marginLeft="10dip"
-                android:layout_marginRight="10dip"
-                android:layout_marginTop="10dip"
-                android:background="@drawable/bordertop"
-                android:duplicateParentState="true"
-                android:gravity="center_vertical" >
+			    android:id="@+id/linearAbout"
+			    android:layout_width="match_parent"
+			    android:layout_height="50dip"
+			    android:background="@drawable/bordertop"
+			    android:layout_marginLeft="10dip"
+			    android:layout_marginRight="10dip"
+			    android:layout_marginTop="10dip"
+			    android:clickable="true"		
+			    android:gravity="center_vertical" >
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:paddingLeft="10dip"
+                    
                     android:src="@drawable/about" />
 
                 <TextView
@@ -268,14 +171,15 @@
                     android:paddingLeft="5dip"
                     android:text="  关于"
                     android:textSize="15dp" />
+
                   <TextView
-                    android:id="@+id/txtversion"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingRight="5dip"
-                    android:text=" V1.0.1"
-                    android:textColor="#b0b0b0"
-                    android:textSize="15dp" />
+                      android:id="@+id/txtversion"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:paddingRight="5dip"
+                      android:text=" V1.1.0"
+                      android:textColor="#b0b0b0"
+                      android:textSize="15dp" />
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -283,106 +187,21 @@
                     android:paddingRight="10dip"
                     android:src="@drawable/into" />
             </LinearLayout>
-            <LinearLayout
-             
-				android:layout_width="match_parent"
-                android:layout_height="50dip"
-                android:layout_marginLeft="10dip"
-                android:layout_marginRight="10dip"
-                android:background="@drawable/borderbottom"
-                android:duplicateParentState="true"
-                android:gravity="center_vertical" >
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="10dip"
-                    android:src="@drawable/checkup" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1.0"
-                    android:paddingLeft="5dip"
-                    android:text="  检查更新"
-                    android:textSize="15dp" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingRight="10dip"
-                    android:src="@drawable/sl" />
-            </LinearLayout>
-            <LinearLayout
-               	android:layout_width="match_parent"
-                android:layout_height="50dip"
-                android:layout_marginLeft="10dip"
-                android:layout_marginRight="10dip"
-                android:background="@drawable/borderbottom"
-                android:duplicateParentState="true"
-                android:gravity="center_vertical" >
-			 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="10dip"
-                    android:src="@drawable/submission" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1.0"
-                    android:paddingLeft="5dip"
-                    android:text="  意见反馈"
-                    android:textSize="15dp" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingRight="10dip"
-                    android:src="@drawable/sl" />
-            </LinearLayout>
             
-            <LinearLayout
-                android:id="@+id/linearLogout"
-                android:layout_width="match_parent"
-                android:layout_height="50dip"
-                android:layout_marginLeft="10dip"
-                android:layout_marginRight="10dip"
-                android:layout_marginTop="10dip"
-                android:background="@drawable/bordertop"
-                android:clickable="true"
-                android:gravity="center_vertical" >
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="10dip"
-                    android:src="@drawable/logout" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1.0"
-                    android:paddingLeft="5dip"
-                    android:text="  注销"
-                    android:textSize="15dp" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingRight="10dip"
-                    android:src="@drawable/sl" />
-            </LinearLayout>
+			
+			
+ 
+                
+          
             <LinearLayout
                 android:id="@+id/linearExit"
                	android:layout_width="match_parent"
                 android:layout_height="50dip"
                 android:layout_marginLeft="10dip"
                 android:layout_marginRight="10dip"
+                android:layout_marginTop="10dip"
                 android:background="@drawable/borderbottom"
-                android:duplicateParentState="true"
+                android:clickable="true"
                 android:gravity="center_vertical" >
 			 <ImageView
                     android:layout_width="wrap_content"
@@ -394,9 +213,10 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1.0"
+                    android:layout_weight="0.94"
                     android:paddingLeft="5dip"
                     android:text="  退出"
+                    android:textColor="@color/pressed"
                     android:textSize="15dp" />
 
                 <ImageView

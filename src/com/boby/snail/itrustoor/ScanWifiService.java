@@ -42,7 +42,8 @@ public class ScanWifiService extends Service {
 	private int WifiStatus = 0, once = 0;
 	private int intin;
 	private int schoolid;
-	private String card, schoolname;
+	private int studentid;
+	private String   schoolname;
 	public int intheschool;// 学生当前所在学校所属数组
 	private boolean appscanwifi = false;
 	Data myconfig;
@@ -62,27 +63,28 @@ public class ScanWifiService extends Service {
 		startForeground(1, notification);
 		myconfig = (Data) getApplication();
 		myconfig.setenablestartservice(true);
-		String savestring = myconfig.getschool();// 保存的MAC地址与学校对应信息
+		String savestring = myconfig.getwifi();// 保存的MAC地址与学校对应信息
+	
+		
 		intheschool = myconfig.getinschool(); // 保存的学生当前位置
 		if (intheschool > 0){
 			status = 4;
 			schoolname=myconfig.getschoolname();
 			schoolid=myconfig.getid();
 		}
-
+		
+		studentid=myconfig.getid();
 		JSONArray jsonArray;
 		try {
 			jsonArray = new JSONArray(savestring);
 			for (int i = 0; i < jsonArray.length(); i++) {
 				JSONObject jsonObject;
 				jsonObject = jsonArray.getJSONObject(i);
-				int sschoolid = jsonObject.getInt("schid");
-				String scardid = jsonObject.getString("cardid");
-				String sschoolname = jsonObject.getString("schoolname");
-				String smac = jsonObject.getString("mac");
+				int sschoolid = jsonObject.getInt("macid");			 
+				String sschoolname = jsonObject.getString("macname");
+				String smac = jsonObject.getString("macs");
 				Wifilist tempwifi = new Wifilist();
 				tempwifi.setschid(sschoolid);
-				tempwifi.setcard(scardid);
 				tempwifi.setschoollist(smac);
 				tempwifi.setschoolname(sschoolname);
 				schlist.add(tempwifi);
@@ -91,6 +93,9 @@ public class ScanWifiService extends Service {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		
+		
 		Log.v("debug", "后台服务启动");
 		mainWifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
 		localBroadcastManager = LocalBroadcastManager.getInstance(this);
@@ -140,10 +145,9 @@ public class ScanWifiService extends Service {
 			if (isNetworkAvailable()) {
 				String strtvbox = "card=" + buffer.getcard() + "&att_time="
 						+ buffer.getatttime() + "&type=" + buffer.getIsin()
-						+ "&sch_id=" + buffer.getschoolid()
-						+ "&kind=0&entex_id=1";
+						+ "&sch_id=" + buffer.getschoolid()+"&stu_id="+buffer.getid();
 				Log.v("debug", strtvbox);
-				HttpUtil.sendHttpPostRequest("/tvbox/attends", strtvbox,
+				HttpUtil.sendHttpPostRequest("/wifi/wifiAttends", strtvbox,
 						new HttpCallbackListener() {
 							@Override
 							public void onFinish(String response) {
@@ -154,7 +158,7 @@ public class ScanWifiService extends Service {
 
 							@Override
 							public void onError(Exception e) {
-								sendLocalBroadcast("3", "上传缓存队列数据遇到错误");
+								sendLocalBroadcast("3", e.toString());
 
 							}
 						});
@@ -209,7 +213,7 @@ public class ScanWifiService extends Service {
 						// sendLocalBroadcast("1","扫描到培训学校MAC地址");
 						status = 4;
 						// checkintheschool = 1023;
-						card = schlist.get(intin).getcard();
+					 
 						schoolid = schlist.get(intin).getschid();
 						schoolname = schlist.get(intin).getschoolname();
 						if (schoolid != intheschool) {
@@ -233,9 +237,10 @@ public class ScanWifiService extends Service {
 							Log.v("debug", "保存位置信息");
 							Intent iupdate = new Intent(context,
 									UpdateService.class);
-							iupdate.putExtra("datacard", card);
+							iupdate.putExtra("datastudentid",studentid);
 							iupdate.putExtra("dataatttime", atttime);
 							iupdate.putExtra("dataschoolid", schoolid);
+							iupdate.putExtra("datacard", "W"+schoolid);
 							iupdate.putExtra("isin", 0);
 							startService(iupdate);
 							status = 4;
@@ -270,9 +275,10 @@ public class ScanWifiService extends Service {
 						Log.v("debug", "保存位置信息");
 						Intent iupdate = new Intent(context,
 								UpdateService.class);
-						iupdate.putExtra("datacard", card);
+						iupdate.putExtra("datastudentid", studentid);
 						iupdate.putExtra("dataatttime", atttime);
 						iupdate.putExtra("dataschoolid", schoolid);
+						iupdate.putExtra("datacard", "W"+schoolid);
 						iupdate.putExtra("isin", 1);
 						startService(iupdate);
 					}

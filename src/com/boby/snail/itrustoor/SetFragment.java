@@ -9,6 +9,7 @@ import org.json.JSONObject;
 
 import com.boby.snail.itrustoor.HttpUtil.HttpCallbackListener;
 import com.boby.snail.itrustoor.R;
+import com.boby.snail.itrustoor.R.id;
 import com.zxing.activity.CaptureActivity;
 
 import android.app.Activity;
@@ -35,8 +36,8 @@ import android.widget.Toast;
 
 public class SetFragment extends Fragment {
 	private Dialog dialog;
-	private LinearLayout linearscanbarcode, linearlogout, linearsync,
-			linearfrequency, linearexit;
+	private LinearLayout linearscanbarcode,   linearsetpos,linearconfiglan,
+			  linearexit, linearabout, linearscanwifi;
 	int sfamilyid;
 	int sstudentid;
 	Data myconfig;
@@ -52,41 +53,28 @@ public class SetFragment extends Fragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		myconfig = (Data) getActivity().getApplication();
+		linearscanwifi = (LinearLayout) getActivity().findViewById(
+				R.id.linearScanWifi);
+		linearscanwifi.setOnClickListener(onclicklistener);
 		linearscanbarcode = (LinearLayout) getActivity().findViewById(
 				R.id.linearScanbarcode);
 		linearscanbarcode.setOnClickListener(onclicklistener);
-
-		linearlogout = (LinearLayout) getActivity().findViewById(
-				R.id.linearLogout);
-		linearlogout.setOnClickListener(onclicklistener);
-
-		linearfrequency = (LinearLayout) getActivity().findViewById(
-				R.id.linearFrequency);
-		linearfrequency.setOnClickListener(onclicklistener);
-
-		linearsync = (LinearLayout) getActivity().findViewById(R.id.linearSync);
-		linearsync.setOnClickListener(onclicklistener);
-
-		linearexit = (LinearLayout) getActivity().findViewById(R.id.linearExit);
+		linearexit=(LinearLayout)getActivity().findViewById(R.id.linearExit);
 		linearexit.setOnClickListener(onclicklistener);
+	    
+		linearabout=(LinearLayout)getActivity().findViewById(R.id.linearAbout);
+		linearabout.setOnClickListener(onclicklistener);
+		
+		linearconfiglan=(LinearLayout)getActivity().findViewById(R.id.linearConfigLan);
+		linearconfiglan.setOnClickListener(onclicklistener);
+ 
+		linearsetpos=(LinearLayout)getActivity().findViewById(R.id.linearSetPos);
+		linearsetpos.setOnClickListener(onclicklistener);
 
+		
 		sfamilyid = myconfig.getfamilyid();
 		sstudentid = myconfig.getid();
-		TextView frequency = (TextView) getActivity().findViewById(
-				R.id.frequency);
-		switch (myconfig.getfrequency()) {
-		case 0:
-			frequency.setText("快(15秒)");
-			break;
-		case 1:
-			frequency.setText("中(30秒)");
-			break;
-		case 2:
-			frequency.setText("慢(60秒)");
-			break;
-		default:
-			break;
-		}
+		
 
 	}
 
@@ -128,81 +116,41 @@ public class SetFragment extends Fragment {
 		//
 		public void onClick(View v) {
 			switch (v.getId()) {
+			case R.id.linearScanWifi:
+				Intent intent = new Intent(getActivity(),
+						SelWifi.class);
+				startActivityForResult(intent,0);
+				break;
+		
 			case R.id.linearScanbarcode:
 				// 打开扫描界面扫描条形码或二维码
 				Intent openCameraIntent = new Intent(getActivity(),
 						CaptureActivity.class);
 				startActivityForResult(openCameraIntent, 0);
 				break;
-			case R.id.linearExit:
-				new AlertDialog.Builder(getActivity())
-						.setTitle("确认")
-						.setMessage("确定要退出程序?")
-						.setPositiveButton("确定",
-								new DialogInterface.OnClickListener() {
-									public void onClick(DialogInterface dialog,
-											int whichButton) {
-										stopservice();
-										myconfig.setenablestartservice(false);
-										getActivity().finish();
-										
-										
-									
-									}
-
-								}).setNegativeButton("取消", null).show();
+			case	R.id.linearExit:
+				Intent exitIntent = new Intent(getActivity(),
+						Exit.class);
+				startActivityForResult(exitIntent, 0);
 				break;
-				
-			case R.id.linearLogout:
-				new AlertDialog.Builder(getActivity())
-						.setTitle("退出当前帐号")
-						.setMessage("确定要切换登录帐号?")
-						.setPositiveButton("确定",
-								new DialogInterface.OnClickListener() {
-									public void onClick(DialogInterface dialog,
-											int whichButton) {
-										stopservice();
-										myconfig.logout();// 提交修改
-										myconfig.setenablestartservice(false);
-										getActivity().finish();
-										Intent intent = new Intent(
-												getActivity(), Login.class);
-										startActivity(intent);
-									}
-
-								}).setNegativeButton("取消", null).show();
-
-				// overridePendingTransition(R.anim.slide_in_right,
-				// R.anim.slide_out_left);
-				// finish();
+			case	R.id.linearConfigLan:
+				Intent ConfigLanIntent = new Intent(getActivity(),
+						ConfigLan.class);
+				startActivityForResult(ConfigLanIntent, 0);
 				break;
-			case R.id.linearSync:
-				sync("stu_id=" + sstudentid);
+			case	R.id.linearAbout:
+				Intent aboutIntent = new Intent(getActivity(),
+						About.class);
+				startActivityForResult(aboutIntent, 0);
 				break;
-			case R.id.linearFrequency:
-				final String[] items = { "快(15秒)", "中(30秒)", "慢(60秒)" };
-
-				new AlertDialog.Builder(getActivity())
-						.setTitle("请选择")
-						.setIcon(android.R.drawable.ic_dialog_info)
-						.setSingleChoiceItems(items, myconfig.getfrequency(),
-								new DialogInterface.OnClickListener() {
-									public void onClick(DialogInterface dialog,
-											int which) {
-										TextView frequency = (TextView) getActivity()
-												.findViewById(R.id.frequency);
-										TextView scanfrequency = (TextView) getActivity()
-												.findViewById(
-														R.id.scanfrequency);
-										frequency.setText(items[which]);
-										scanfrequency.setText(items[which]);
-										myconfig.setfrequency(which);
-
-										dialog.dismiss();
-									}
-								}).setNegativeButton("取消", null).show();
-
+			case R.id.linearSetPos:
+				Intent posIntent = new Intent(getActivity(),
+						SetPos.class);
+				startActivityForResult(posIntent, 0);
 				break;
+					
+			
+			
 			}
 		}
 	};
@@ -221,32 +169,33 @@ public class SetFragment extends Fragment {
 
 	}
 
-	//
-	public void sync(String HttpString) {
-		dialog = ProgressDialog.show(getActivity(), "", "云端数据同步...");
-		HttpUtil.sendHttpPostRequest("/snail/sync", HttpString,
-				new HttpCallbackListener() {
-					@Override
-					public void onFinish(String response) {
-						dialog.dismiss();
-						Message message = new Message();
-						message.what = 2;
-						message.obj = response.toString();
-						handler.sendMessage(message);
-					}
+		public void syncstu(String HttpString) {
+			// 同步手动添加的定位点数据
+			dialog = ProgressDialog.show(getActivity(), "", "正在同步扫描的定位点数据...");
+			Log.v("debug", "第二次同步");
+			HttpUtil.sendHttpPostRequest("/wifi/syncWifi", HttpString,
+					new HttpCallbackListener() {
+						@Override
+						public void onFinish(String response) {
+							dialog.dismiss();
+							Message message = new Message();
+							message.what = 3;
+							message.obj = response.toString();
+							handler.sendMessage(message);
+							Log.v("debug", "第二次同步完成");
+						}
 
-					@Override
-					public void onError(Exception e) {
-						Looper.prepare();
-						dialog.dismiss();
-						new AlertDialog.Builder(getActivity()).setTitle("退出")
-								.setMessage("数据同步失败,请检查网络设置或联系客服!")
-								.setPositiveButton("确定", null).show();
-						Looper.loop();
-					}
-				});
-
-	}
+						@Override
+						public void onError(Exception e) {
+							Looper.prepare();
+							dialog.dismiss();
+							new AlertDialog.Builder(getActivity()).setTitle("退出")
+									.setMessage(e.toString())// "Wifi定位点同步失败,请检查网络设置或联系客服!")
+									.setPositiveButton("确定", null).show();
+							Looper.loop();
+						}
+					});
+		}
 
 	// 绑定二维码
 	public void bindcard(String HttpString) {
@@ -293,96 +242,72 @@ public class SetFragment extends Fragment {
 					switch (msg.what) {
 					case 1:
 						// 绑定完成.
-						sync("stu_id=" + String.valueOf(sstudentid));
+						syncstu("stu_id=" + String.valueOf(sstudentid));
 						Log.v("debug", String.valueOf(sstudentid));
 						break;
 					case 2:
-						// 数据同步
+//						
+						break;
+					case 3:
+						Log.v("debug", "处理第二次同步数据");
+						// 同步数据,如未绑定学校,提示用户学校信息不存在,请扫描二维码添加学校信息
+						List<WifiCard> wificardlist = new ArrayList<WifiCard>();
 						jsonArray = new JSONObject(response)
 								.getJSONArray("Data");
-						if (!jsonArray.getJSONObject(0).getString("schools")
-								.equals("null")) {
+						if (!jsonArray.getJSONObject(0).getString("wifi")
+										.equals("null")) {							
 							jsonArray = jsonArray.getJSONObject(0)
-									.getJSONArray("schools");
+									.getJSONArray("wifi");
 							for (int i = 0; i < jsonArray.length(); i++) {
 								if ((!jsonArray.getJSONObject(i)
 										.getString("macs").equals("null"))
 										& (!jsonArray.getJSONObject(i)
 												.getString("macs").equals(""))) {
-									Student stu = new Student();
+									WifiCard stu = new WifiCard();
 									JSONObject jsonObject = jsonArray
 											.getJSONObject(i);
-									String schid = jsonObject.getString("id");// 学校ID
-									stu.setschid(schid);
-									String schoolname = jsonObject
-											.getString("short_name");// 学校名称
-									stu.setschoolname(schoolname);
 
-									String stuid = jsonObject
-											.getJSONArray("cards")
-											.getJSONObject(0).getString("card");// 学号ID
-									stu.setcard(stuid);
-									String maclist = "";
-									for (int j = 0; j < jsonObject
-											.getJSONArray("macs").length(); j++) {
-										String mac = jsonObject
-												.getJSONArray("macs")
-												.getJSONObject(j)
-												.getString("mac");
-										maclist = maclist + " " + mac;
-									}
-									stu.setschoollist(maclist);
-									stulist.add(stu);
+									String macid = jsonObject
+											.getString("macid");// 学校ID
+									stu.setmacid(macid);
+									String macname = jsonObject
+											.getString("macname");// 学校ID
+									stu.setmacname(macname);
+									String mac = jsonObject.getString("macs");
+									stu.setmacs(mac);
+									wificardlist.add(stu);
 								}
 							}
-							String strschool = "";
-							String school = "[";
-							for (int i = 0; i < stulist.size(); i++) {
-								school = school + "{\"schid\":" + "\""
-										+ stulist.get(i).getschid() + "\""
-										+ ",\"cardid\":" + "\""
-										+ stulist.get(i).getcard() + "\""
-										+ ",\"schoolname\":" + "\""
-										+ stulist.get(i).getschoolname() + "\""
-										+ ",\"mac\":" + "\""
-										+ stulist.get(i).getschool().toString()
-										+ "\"}";
-								if (i != stulist.size() - 1)
-									school = school + ",";
 
-								strschool = strschool + "["
-										+ stulist.get(i).getschoolname() + "]";
+							String school = "[";
+							for (int i = 0; i < wificardlist.size(); i++) {
+								school = school + "{\"macid\":" + "\""
+										+ wificardlist.get(i).getmacid() + "\""
+										+ ",\"macname\":" + "\""
+										+ wificardlist.get(i).getmacname()
+										+ "\"" + ",\"macs\":" + "\""
+										+ wificardlist.get(i).getmacs() + "\"}";
+								if (i != wificardlist.size() - 1)
+									school = school + ",";
 							}
 							school = school + "]";
-							myconfig.setschool(school);
-
-							TextView bindbarcode = (TextView) getActivity()
-									.findViewById(R.id.bindbarcode);
-
-							List<Wifilist> schlist = new ArrayList<Wifilist>();
-
-							bindbarcode.setText(strschool);
-
+							myconfig.setwifi(school);
 							new AlertDialog.Builder(getActivity())
-									.setTitle("提示")
-									.setMessage("数据同步完成")
-									.setPositiveButton(
-											"确定",
-											new DialogInterface.OnClickListener() {
-												public void onClick(
-														DialogInterface dialog,
-														int whichButton) {
-													stopservice();
-													startservice();
-												}
-
-											}).show();
-							;
-						} else {
-							Toast.makeText(getActivity(), "云端学校信息为空,同步失败", 0)
-									.show();
+							.setTitle("提示")
+							.setMessage("数据同步完成")
+							.setPositiveButton(
+									"确定",
+									new DialogInterface.OnClickListener() {
+										public void onClick(
+												DialogInterface dialog,
+												int whichButton) {
+											stopservice();
+											startservice();
+										}
+									}).show();
 						}
-
+						else
+							myconfig.setwifi("");
 						break;
 					default:
 						break;

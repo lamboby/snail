@@ -53,7 +53,7 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="2"
                     android:paddingLeft="5dip"
                     android:text="状态"
                     android:textSize="18sp" />
@@ -62,9 +62,24 @@
                     android:id="@+id/atschoolname"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="3"
+                    android:layout_weight="4"
                     android:paddingTop="5dip"
                     android:text="无变化" />
+                   
+                 <TextView
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:layout_weight="1"
+            
+                     android:text="缓存"
+                     android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/buffercount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingTop="5dip" />
 
             </LinearLayout>
 
@@ -91,27 +106,7 @@
                     android:paddingTop="5dip" />
 
             </LinearLayout>
-                    <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="45dip"
-                android:background="@drawable/borderbottom"
-                android:duplicateParentState="true"
-                android:gravity="center_vertical" >
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:paddingLeft="5dip"
-                    android:text="缓存数"
-                    android:textSize="18sp" />
 
-                <TextView
-                    android:id="@+id/buffercount"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="3"
-                    android:paddingTop="5dip" />
-            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
@@ -143,31 +138,6 @@
                     android:paddingLeft="5dip"
                     android:text="	WIFI"
                     android:textSize="18sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="45dip"
-                android:background="@drawable/borderbottom"
-                android:duplicateParentState="true"
-                android:gravity="center_vertical" >
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:paddingLeft="5dip"
-                    android:text="时间"
-                    android:textSize="18sp" />
-
-                <TextView
-                    android:id="@+id/scanwifitime"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="3"
-                    android:paddingTop="5dip"
-                    android:text="" />
-
             </LinearLayout>
 
             <LinearLayout
@@ -247,29 +217,6 @@
                     android:layout_weight="3"
                     android:paddingTop="5dip" />
             </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="45dip"
-                android:background="@drawable/borderbottom"
-                android:duplicateParentState="true"
-                android:gravity="center_vertical" >
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:paddingLeft="5dip"
-                    android:text="二维码"
-                    android:textSize="18sp" />
-
-                <TextView
-                    android:id="@+id/bindbarcode"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="3"
-                    android:paddingTop="5dip" />
-                </LinearLayout>
          
         </LinearLayout>
 </LinearLayout>

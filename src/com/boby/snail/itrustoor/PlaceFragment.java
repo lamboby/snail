@@ -33,8 +33,6 @@ public class PlaceFragment extends Fragment {
 		final Data myconfig = (Data) getActivity().getApplication();
 		TextView scanfrequency = (TextView) getActivity().findViewById(
 				R.id.scanfrequency);
-		TextView bindbarcode = (TextView) getActivity().findViewById(
-				R.id.bindbarcode);
 		TextView viewSchoolname = (TextView) getActivity().findViewById(
 				R.id.atschoolname);
 		TextView viewTime = (TextView) getActivity().findViewById(
@@ -73,7 +71,7 @@ public class PlaceFragment extends Fragment {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		bindbarcode.setText(strschool);
+		
 		
 
 	}

@@ -43,11 +43,13 @@ public class Login extends Activity {
 	private int fam_id;
 	private final String password = "itrustor";
 	private boolean enableSaveLogin = true;
+	private boolean schoolNull = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.login);
+		SysApplication.getInstance().addActivity(this); 
 		Button btnLogin = (Button) findViewById(R.id.btn_login);
 		SharedPreferences pref = getSharedPreferences("snail", MODE_PRIVATE);
 		user_name = pref.getString("username", "");
@@ -144,6 +146,7 @@ public class Login extends Activity {
 					switch (msg.what) {
 					case 1:
 						// 登录完成,开始同步数据.
+						Log.v("debug", "登录完成");
 						jsonArray = new JSONObject(response)
 								.getJSONArray("Data");
 						student_id = jsonArray.getJSONObject(0)
@@ -208,15 +211,20 @@ public class Login extends Activity {
 						myconfig.setid(student_id);
 						break;
 					case 2:
+						break;
+					case 3:
+						Log.v("debug", "处理第二次同步数据");
 						// 同步数据,如未绑定学校,提示用户学校信息不存在,请扫描二维码添加学校信息
-						List<Student> stulist = new ArrayList<Student>();
+						List<WifiCard> wificardlist = new ArrayList<WifiCard>();
 						jsonArray = new JSONObject(response)
 								.getJSONArray("Data");
-						if (jsonArray.getJSONObject(0).getString("schools")
-								.equals("null")) {
+						if  (jsonArray.getJSONObject(0).getString("wifi")
+										.equals("null")) {
+							editor.putString("wifi", "");
+							editor.commit();
 							new AlertDialog.Builder(Login.this)
 									.setTitle("提示:")
-									.setMessage("未绑定学校信息,请进入系统后扫描二维码进行学校绑定.")
+									.setMessage("未绑定Wifi定位点信息,请进入软件后进行绑定.")
 									.setPositiveButton(
 											"确定",
 											new DialogInterface.OnClickListener() {
@@ -224,6 +232,7 @@ public class Login extends Activity {
 												public void onClick(
 														DialogInterface dialog,
 														int i) {
+													
 													Intent intent = new Intent(
 															Login.this,
 															MainActivity.class);
@@ -232,57 +241,41 @@ public class Login extends Activity {
 											}).show();
 						} else {
 							jsonArray = jsonArray.getJSONObject(0)
-									.getJSONArray("schools");
+									.getJSONArray("wifi");
 							for (int i = 0; i < jsonArray.length(); i++) {
 								if ((!jsonArray.getJSONObject(i)
 										.getString("macs").equals("null"))
 										& (!jsonArray.getJSONObject(i)
 												.getString("macs").equals(""))) {
-									Student stu = new Student();
+									WifiCard stu = new WifiCard();
 									JSONObject jsonObject = jsonArray
 											.getJSONObject(i);
 
-									String schid = jsonObject.getString("id");// 学校ID
-									stu.setschid(schid);
-
-									String schoolname = jsonObject
-											.getString("short_name");// 学校ID
-									stu.setschoolname(schoolname);
-
-									String stuid = jsonObject
-											.getJSONArray("cards")
-											.getJSONObject(0).getString("card");// 学号ID
-									stu.setcard(stuid);
-									String maclist = "";
-									for (int j = 0; j < jsonObject
-											.getJSONArray("macs").length(); j++) {
-										String mac = jsonObject
-												.getJSONArray("macs")
-												.getJSONObject(j)
-												.getString("mac");
-										maclist = maclist + " " + mac;
-									}
-									stu.setschoollist(maclist);
-									stulist.add(stu);
+									String macid = jsonObject
+											.getString("macid");// 学校ID
+									stu.setmacid(macid);
+									String macname = jsonObject
+											.getString("macname");// 学校ID
+									stu.setmacname(macname);
+									String mac = jsonObject.getString("macs");
+									stu.setmacs(mac);
+									wificardlist.add(stu);
 								}
 							}
 
 							String school = "[";
-							for (int i = 0; i < stulist.size(); i++) {
-								school = school + "{\"schid\":" + "\""
-										+ stulist.get(i).getschid() + "\""
-										+ ",\"cardid\":" + "\""
-										+ stulist.get(i).getcard() + "\""
-										+ ",\"schoolname\":" + "\""
-										+ stulist.get(i).getschoolname() + "\""
-										+ ",\"mac\":" + "\""
-										+ stulist.get(i).getschool().toString()
-										+ "\"}";
-								if (i != stulist.size() - 1)
+							for (int i = 0; i < wificardlist.size(); i++) {
+								school = school + "{\"macid\":" + "\""
+										+ wificardlist.get(i).getmacid() + "\""
+										+ ",\"macname\":" + "\""
+										+ wificardlist.get(i).getmacname()
+										+ "\"" + ",\"macs\":" + "\""
+										+ wificardlist.get(i).getmacs() + "\"}";
+								if (i != wificardlist.size() - 1)
 									school = school + ",";
 							}
 							school = school + "]";
-							editor.putString("school", school);
+							editor.putString("wifi", school);
 							editor.commit();
 
 							Intent intent = new Intent(Login.this,
@@ -323,18 +316,20 @@ public class Login extends Activity {
 		}
 	};
 
-	// 同步数据
 	public void syncstu(String HttpString) {
-		dialog = ProgressDialog.show(Login.this, "", "正在同步数据...");
-		HttpUtil.sendHttpPostRequest("/snail/sync", HttpString,
+		// 同步手动添加的定位点数据
+		dialog = ProgressDialog.show(Login.this, "", "正在同步扫描的定位点数据...");
+		Log.v("debug", "第二次同步");
+		HttpUtil.sendHttpPostRequest("/wifi/syncWifi", HttpString,
 				new HttpCallbackListener() {
 					@Override
 					public void onFinish(String response) {
 						dialog.dismiss();
 						Message message = new Message();
-						message.what = 2;
+						message.what = 3;
 						message.obj = response.toString();
 						handler.sendMessage(message);
+						Log.v("debug", "第二次同步完成");
 					}
 
 					@Override
@@ -342,12 +337,12 @@ public class Login extends Activity {
 						Looper.prepare();
 						dialog.dismiss();
 						new AlertDialog.Builder(Login.this).setTitle("退出")
-								.setMessage("数据同步失败,请检查网络设置或联系客服!")
+								.setMessage(e.toString())// "Wifi定位点同步失败,请检查网络设置或联系客服!")
 								.setPositiveButton("确定", null).show();
 						Looper.loop();
 					}
 				});
-	};
+	}
 
 	// DES加密
 	public String encrypt(String data, String key) {

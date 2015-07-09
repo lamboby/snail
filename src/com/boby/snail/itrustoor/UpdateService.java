@@ -18,7 +18,7 @@ import android.widget.TextView;
 public class UpdateService extends Service {
 	private LocalBroadcastManager localBroadcastManager;
 	private String card, atttime;
-	private int schoolid;
+	private int schoolid,studentid;
 	private int Isin;
 	private ConnectivityManager mCM;
 	private WifiManager mainWifi;
@@ -47,12 +47,12 @@ public class UpdateService extends Service {
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		atttime = intent.getStringExtra("dataatttime");
-		card = intent.getStringExtra("datacard");
+		studentid= intent.getIntExtra("datastudentid",0);
 		schoolid = intent.getIntExtra("dataschoolid", 0);
 		Isin = intent.getIntExtra("isin", 1);
+		card=intent.getStringExtra("datacard");
 		final String strtvbox = "card=" + card + "&att_time=" + atttime
-				+ "&type=" + Isin + "&sch_id=" + schoolid
-				+ "&kind=0&entex_id=1";
+				+ "&type=" + Isin + "&sch_id=" + schoolid+"&stu_id="+studentid;
 
 		new Thread(new Runnable() {
 			@Override
@@ -226,8 +226,9 @@ public class UpdateService extends Service {
 			}
 		}
 		Log.v("debug", "延时后发送数据" + String.valueOf(i));
-		HttpUtil.sendHttpPostRequest("/tvbox/attends", strt,
-				new HttpCallbackListener() {
+		HttpUtil.sendHttpPostRequest("/wifi/wifiAttends", strt,
+				
+					new HttpCallbackListener() {
 					@Override
 					public void onFinish(String response) {
 						sendLocalBroadcast("2", "完成上传数据到云端服务器");
@@ -265,6 +266,7 @@ public class UpdateService extends Service {
 							DataBuffer errdata = new DataBuffer();
 							errdata.setatttime(atttime);
 							errdata.setIsin(Isin);
+							errdata.setid(schoolid);
 							errdata.setcard(card);
 							errdata.setschoolid(schoolid);
 							myconfig.additem(errdata);
