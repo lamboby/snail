@@ -42,17 +42,27 @@ public class PlaceFragment extends Fragment {
 		Log.v("debug", "位置页面建立");
 		switch (myconfig.getfrequency()) {
 		case 0:
-			scanfrequency.setText("快(15秒)");
+			scanfrequency.setText("超快(15秒)");
 			break;
 		case 1:
-			scanfrequency.setText("中(30秒)");
+			scanfrequency.setText("快(30秒)");
 			break;
 		case 2:
-			scanfrequency.setText("慢(60秒)");
+			scanfrequency.setText("中(120秒)");
+			break;
+		case 3:
+			scanfrequency.setText("慢(360秒)");
 			break;
 		default:
 			break;
 		}
+		final TextView textviewDebug=(TextView)getActivity().findViewById(R.id.TDebug);
+        if(!myconfig.getdebugmode()){
+        	textviewDebug.setVisibility(View.GONE);
+        }
+        else
+        	textviewDebug.setVisibility(View.VISIBLE );
+		
 		List<Wifilist> schlist = new ArrayList<Wifilist>();
 		String strschool = "";
 		String savestring = myconfig.getschool();// 保存的MAC地址与学校对应信息

@@ -24,14 +24,13 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
-
 public class MsgFragment<User> extends ListFragment {
 	List<Map<String, Object>> listItems;
 	SimpleAdapter adapter;
 
 	// private MyListAdapter adapter=null;
 	private int[] images = new int[] { R.drawable.welcome_0, R.drawable.wifi_1,
-			R.drawable.cloud_2, R.drawable.err_3 ,R.drawable.data_4};
+			R.drawable.cloud_2, R.drawable.err_3, R.drawable.data_4 };
 
 	private IntentFilter intentFilter;
 	private LocalReceiver localReceiver;
@@ -44,12 +43,13 @@ public class MsgFragment<User> extends ListFragment {
 		// list = (ListView) view.findViewById(android.R.id.list);
 		return view;
 	}
+
 	public void startservice() {
-		Intent startIntent = new Intent(getActivity(),
-				ScanWifiService.class);
+		Intent startIntent = new Intent(getActivity(), ScanWifiService.class);
 		getActivity().startService(startIntent);
-		
+
 	}
+
 	// 接收本地广播
 	class LocalReceiver extends BroadcastReceiver {
 		@Override
@@ -59,9 +59,7 @@ public class MsgFragment<User> extends ListFragment {
 					R.id.buffercount);
 			buffercount.setText(String.valueOf(myconfig.getcount()));
 
-			
-			SimpleDateFormat formatter = new SimpleDateFormat(
-					"HH:mm:ss");
+			SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
 			Date curDate = new Date(System.currentTimeMillis());// 获取当前时间
 			String atttime = formatter.format(curDate);
 
@@ -71,22 +69,39 @@ public class MsgFragment<User> extends ListFragment {
 					R.id.atschooltime);
 			TextView viewWifiscan = (TextView) getActivity().findViewById(
 					R.id.wifiscan);
-
+			TextView scanfrequency = (TextView) getActivity().findViewById(
+					R.id.scanfrequency);
 
 			if (intent.getStringExtra("Type") == "14") {
-				viewWifiscan.setText(atttime+intent.getStringExtra("Value"));
+				viewWifiscan.setText(atttime + intent.getStringExtra("Value"));
+			} else if (intent.getStringExtra("Type") == "15") {
+				switch (myconfig.getfrequency()) {
+				case 0:
+					scanfrequency.setText("超快(15秒)");
+					break;
+				case 1:
+					scanfrequency.setText("快(30秒)");
+					break;
+				case 2:
+					scanfrequency.setText("中(120秒)");
+					break;
+				case 3:
+					scanfrequency.setText("慢(360秒)");
+					break;
+				default:
+					break;
+				}
+			}
 
-			} else {
+			else {
 				if (intent.getStringExtra("Type") == "0") {
-							
 					viewSchoolname.setText(intent.getStringExtra("Value"));
 					viewTime.setText(atttime);
-					
 				}
 				addItem(atttime, intent.getStringExtra("Value"),
 						Integer.parseInt(intent.getStringExtra("Type")));
 			}
-			
+
 		}
 	}
 
@@ -99,11 +114,11 @@ public class MsgFragment<User> extends ListFragment {
 		localReceiver = new LocalReceiver();
 		localBroadcastManager.registerReceiver(localReceiver, intentFilter);
 		startservice();
-		
+
 	}
-	
+
 	@Override
-	public void onDestroy(){
+	public void onDestroy() {
 		super.onDestroy();
 		localBroadcastManager.unregisterReceiver(localReceiver);
 	}

@@ -1,18 +1,15 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content" >
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="640dp" >
-
         <LinearLayout
             android:id="@+id/itemContainer"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:minHeight="60dip"
             android:orientation="vertical" >
-
             <LinearLayout
                 android:id="@+id/linearScanWifi"
                 android:layout_width="match_parent"
@@ -21,16 +18,14 @@
                 android:layout_marginRight="10dip"
                 android:layout_marginTop="10dip"
                 android:background="@drawable/bordertop"
-                android:clickable="true" 
+                android:clickable="true"
                 android:gravity="center_vertical" >
-
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:paddingLeft="10dip"
                     android:src="@drawable/home" />
-
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -38,7 +33,6 @@
                     android:paddingLeft="5dip"
                     android:text="  扫描WIFI"
                     android:textSize="15dp" />
-
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -47,15 +41,15 @@
             </LinearLayout>
 
             <LinearLayout
-                 android:id="@+id/linearScanbarcode"
+                android:id="@+id/linearScanbarcode"
                 android:layout_width="match_parent"
                 android:layout_height="50dip"
                 android:layout_marginLeft="10dip"
                 android:layout_marginRight="10dip"
                 android:background="@drawable/borderbottom"
-                android:clickable="true" 
-                android:visibility="gone" 
-                android:gravity="center_vertical" >
+                android:clickable="true"
+                android:gravity="center_vertical"
+                android:visibility="gone" >
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -89,7 +83,6 @@
                 android:background="@drawable/bordertop"
                 android:clickable="true"
                 android:gravity="center_vertical" >
-
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -104,14 +97,12 @@
                     android:paddingLeft="5dip"
                     android:text="  管理WIFI定位点"
                     android:textSize="15dp" />
-
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingRight="10dip"
                     android:src="@drawable/into" />
             </LinearLayout>
-            
             <LinearLayout
                 android:id="@+id/linearConfigLan"
                 android:layout_width="match_parent"
@@ -122,14 +113,12 @@
                 android:background="@drawable/bordertop"
                 android:clickable="true"
                 android:gravity="center_vertical" >
-
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:paddingLeft="10dip"
                     android:src="@drawable/time" />
-
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -145,25 +134,22 @@
                     android:src="@drawable/into" />
             </LinearLayout>
 
-			<LinearLayout
-			    android:id="@+id/linearAbout"
-			    android:layout_width="match_parent"
-			    android:layout_height="50dip"
-			    android:background="@drawable/bordertop"
-			    android:layout_marginLeft="10dip"
-			    android:layout_marginRight="10dip"
-			    android:layout_marginTop="10dip"
-			    android:clickable="true"		
-			    android:gravity="center_vertical" >
-
+            <LinearLayout
+                android:id="@+id/linearAbout"
+                android:layout_width="match_parent"
+                android:layout_height="50dip"
+                android:layout_marginLeft="10dip"
+                android:layout_marginRight="10dip"
+                android:layout_marginTop="10dip"
+                android:background="@drawable/bordertop"
+                android:clickable="true"
+                android:gravity="center_vertical" >
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:paddingLeft="10dip"
-                    
                     android:src="@drawable/about" />
-
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -171,31 +157,24 @@
                     android:paddingLeft="5dip"
                     android:text="  关于"
                     android:textSize="15dp" />
-
-                  <TextView
-                      android:id="@+id/txtversion"
-                      android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:paddingRight="5dip"
-                      android:text=" V1.1.0"
-                      android:textColor="#b0b0b0"
-                      android:textSize="15dp" />
-
+                <TextView
+                    android:id="@+id/txtversion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="5dip"
+                    android:text=" V1.2.2"
+                    android:textColor="#b0b0b0"
+                    android:textSize="15dp" />
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingRight="10dip"
                     android:src="@drawable/into" />
             </LinearLayout>
-            
-			
-			
- 
-                
-          
+
             <LinearLayout
                 android:id="@+id/linearExit"
-               	android:layout_width="match_parent"
+                android:layout_width="match_parent"
                 android:layout_height="50dip"
                 android:layout_marginLeft="10dip"
                 android:layout_marginRight="10dip"
@@ -203,13 +182,12 @@
                 android:background="@drawable/borderbottom"
                 android:clickable="true"
                 android:gravity="center_vertical" >
-			 <ImageView
+                <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:paddingLeft="10dip"
                     android:src="@drawable/exit" />
-
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -218,7 +196,6 @@
                     android:text="  退出"
                     android:textColor="@color/pressed"
                     android:textSize="15dp" />
-
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -226,8 +203,5 @@
                     android:src="@drawable/sl" />
             </LinearLayout>
         </LinearLayout>
-        
-        
     </RelativeLayout>
-
 </ScrollView>

@@ -1,5 +1,6 @@
 package com.boby.snail.itrustoor;
 
+import java.lang.reflect.Method;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -9,8 +10,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.boby.snail.itrustoor.HttpUtil.HttpCallbackListener;
 import com.boby.snail.itrustoor.R;
+import com.boby.snail.itrustoor.HttpUtil.HttpCallbackListener;
 
 import android.app.AlarmManager;
 import android.app.Notification;
@@ -20,6 +21,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.media.MediaPlayer;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.ConnectivityManager;
@@ -43,11 +45,11 @@ public class ScanWifiService extends Service {
 	private int intin;
 	private int schoolid;
 	private int studentid;
-	private String   schoolname;
+	private String schoolname;
 	public int intheschool;// 学生当前所在学校所属数组
 	private boolean appscanwifi = false;
 	Data myconfig;
-	int[] ifrequency = { 15, 30, 60 };
+	int[] ifrequency = { 15, 30, 120, 360 };
 	private PowerManager.WakeLock wakeLock = null;
 
 	@Override
@@ -60,27 +62,25 @@ public class ScanWifiService extends Service {
 				notificationIntent, 0);
 		notification.setLatestEventInfo(this, "小蜗牛报平安", "荆州忠帮信息技术有限公司",
 				pendingIntent);
-		startForeground(1, notification);
+		startForeground(0, notification);
 		myconfig = (Data) getApplication();
 		myconfig.setenablestartservice(true);
 		String savestring = myconfig.getwifi();// 保存的MAC地址与学校对应信息
-	
-		
 		intheschool = myconfig.getinschool(); // 保存的学生当前位置
-		if (intheschool > 0){
+		if (intheschool > 0) {
 			status = 4;
-			schoolname=myconfig.getschoolname();
-			schoolid=myconfig.getid();
+			schoolname = myconfig.getschoolname();
+			schoolid = myconfig.getid();
 		}
-		
-		studentid=myconfig.getid();
+
+		studentid = myconfig.getid();
 		JSONArray jsonArray;
 		try {
 			jsonArray = new JSONArray(savestring);
 			for (int i = 0; i < jsonArray.length(); i++) {
 				JSONObject jsonObject;
 				jsonObject = jsonArray.getJSONObject(i);
-				int sschoolid = jsonObject.getInt("macid");			 
+				int sschoolid = jsonObject.getInt("macid");
 				String sschoolname = jsonObject.getString("macname");
 				String smac = jsonObject.getString("macs");
 				Wifilist tempwifi = new Wifilist();
@@ -93,9 +93,7 @@ public class ScanWifiService extends Service {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
-		
+
 		Log.v("debug", "后台服务启动");
 		mainWifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
 		localBroadcastManager = LocalBroadcastManager.getInstance(this);
@@ -145,9 +143,11 @@ public class ScanWifiService extends Service {
 			if (isNetworkAvailable()) {
 				String strtvbox = "card=" + buffer.getcard() + "&att_time="
 						+ buffer.getatttime() + "&type=" + buffer.getIsin()
-						+ "&sch_id=" + buffer.getschoolid()+"&stu_id="+buffer.getid();
+						+ "&sch_id=" + buffer.getschoolid() + "&stu_id="
+						+ buffer.getid();
 				Log.v("debug", strtvbox);
-				HttpUtil.sendHttpPostRequest("/wifi/wifiAttends", strtvbox,
+				HttpUtil.sendHttpPostRequest(myconfig.getdebugmode(),
+						"/wifi/wifiAttends", strtvbox,
 						new HttpCallbackListener() {
 							@Override
 							public void onFinish(String response) {
@@ -159,10 +159,8 @@ public class ScanWifiService extends Service {
 							@Override
 							public void onError(Exception e) {
 								sendLocalBroadcast("3", e.toString());
-
 							}
 						});
-
 			}
 		}
 		new Thread(new Runnable() {
@@ -175,8 +173,10 @@ public class ScanWifiService extends Service {
 						WifiStatus = 1;
 
 					} else {
-						OpenWifi();
-						WifiStatus = 0;
+						if (!isWifiApEnabled()) {
+							OpenWifi();
+							WifiStatus = 0;
+						}
 					}
 					scanWifi();
 				}
@@ -206,64 +206,83 @@ public class ScanWifiService extends Service {
 				wifiList = mainWifi.getScanResults();
 				// 扫描到WIFI后做出判断,上传数据
 				sendLocalBroadcast("14", "扫描到" + wifiList.size() + "个WIFI热点");
+				ScanResult tempResult = null;
+				boolean enablescan = true;
+				int tempid, tempintin;
+				// 如果上一次扫描到,这次还在此位置,不提示.
 				for (int i = 0; i < wifiList.size(); i++) {
-					result = wifiList.get(i);
-					intin = wifiin(result.BSSID);
-					if (intin != -1) {
-						// sendLocalBroadcast("1","扫描到培训学校MAC地址");
-						status = 4;
-						// checkintheschool = 1023;
-					 
-						schoolid = schlist.get(intin).getschid();
-						schoolname = schlist.get(intin).getschoolname();
-						if (schoolid != intheschool) {
-							intheschool = schoolid;
-							myconfig.setinschool(intheschool);
-							myconfig.setschoolname(schoolname);
-							sendLocalBroadcast("0", "到达 " + schoolname);
-							Uri notification = RingtoneManager
-									.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-							Ringtone r = RingtoneManager.getRingtone(
-									getApplicationContext(), notification);
-							r.play();
-
-							SimpleDateFormat formatter = new SimpleDateFormat(
-									"yyyy-MM-dd  HH:mm:ss");
-							// 获取当前时间
-							Date curDate = new Date(System.currentTimeMillis());
-							String atttime = formatter.format(curDate);
-							myconfig.setatplace("到达: " + schoolname);
-							myconfig.setatplacetime(atttime);
-							Log.v("debug", "保存位置信息");
-							Intent iupdate = new Intent(context,
-									UpdateService.class);
-							iupdate.putExtra("datastudentid",studentid);
-							iupdate.putExtra("dataatttime", atttime);
-							iupdate.putExtra("dataschoolid", schoolid);
-							iupdate.putExtra("datacard", "W"+schoolid);
-							iupdate.putExtra("isin", 0);
-							startService(iupdate);
+					tempResult = wifiList.get(i);
+					tempintin = wifiin(tempResult.BSSID);
+					if (tempintin != -1) {
+						Log.v("debug", "第一个WIFI查到了");
+						tempid = schlist.get(tempintin).getschid();
+						if (tempid == intheschool) {
+							enablescan = false;
 							status = 4;
 							break;
-
 						}
 					}
 				}
 
-				/*
-				 * if ((checkintheschool == 1029) && (once == 0)) { intheschool
-				 * = -1; once = 1; Log.v("debug", String.valueOf(once)); }
-				 */
+				if (enablescan) {
+					for (int i = 0; i < wifiList.size(); i++) {
+						result = wifiList.get(i);
+						intin = wifiin(result.BSSID);
+						if (intin != -1) {
+							// sendLocalBroadcast("1","扫描到培训学校MAC地址");
+							status = 4;
+							// checkintheschool = 1023;
+							schoolid = schlist.get(intin).getschid();
+							schoolname = schlist.get(intin).getschoolname();
+							if (schoolid != intheschool) {
+								intheschool = schoolid;
+								myconfig.setinschool(intheschool);
+								myconfig.setschoolname(schoolname);
+								sendLocalBroadcast("0", "到达 " + schoolname);
+
+								MediaPlayer mediaPlayer01;
+								mediaPlayer01 = MediaPlayer.create(
+										ScanWifiService.this, R.raw.slow_4s);
+								mediaPlayer01.start();
+
+								SimpleDateFormat formatter = new SimpleDateFormat(
+										"yyyy-MM-dd  HH:mm:ss");
+								// 获取当前时间
+								Date curDate = new Date(
+										System.currentTimeMillis());
+								String atttime = formatter.format(curDate);
+								myconfig.setatplace("到达: " + schoolname);
+								myconfig.setatplacetime(atttime);
+								Log.v("debug", "保存位置信息");
+								Intent iupdate = new Intent(context,
+										UpdateService.class);
+								iupdate.putExtra("datastudentid", studentid);
+								iupdate.putExtra("dataatttime", atttime);
+								iupdate.putExtra("dataschoolid", schoolid);
+								iupdate.putExtra("datacard", "W" + schoolid);
+								iupdate.putExtra("isin", 0);
+								startService(iupdate);
+								status = 4;
+								break;
+							}
+						}
+					}
+				}
 
 				if (status > 0) {
 					status--;
 					if (status == 0) {
 						sendLocalBroadcast("0", "离开 " + schoolname);
-						Uri notification = RingtoneManager
-								.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-						Ringtone r = RingtoneManager.getRingtone(
-								getApplicationContext(), notification);
-						r.play();
+						// Uri notification = RingtoneManager
+						// .getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+						// Ringtone r = RingtoneManager.getRingtone(
+						// getApplicationContext(), notification);
+						// r.play();
+						MediaPlayer mediaPlayer01;
+						mediaPlayer01 = MediaPlayer.create(
+								ScanWifiService.this, R.raw.slow_4s);
+						mediaPlayer01.start();
+
 						intheschool = -1;
 						myconfig.setinschool(intheschool);
 						SimpleDateFormat formatter = new SimpleDateFormat(
@@ -278,7 +297,7 @@ public class ScanWifiService extends Service {
 						iupdate.putExtra("datastudentid", studentid);
 						iupdate.putExtra("dataatttime", atttime);
 						iupdate.putExtra("dataschoolid", schoolid);
-						iupdate.putExtra("datacard", "W"+schoolid);
+						iupdate.putExtra("datacard", "W" + schoolid);
 						iupdate.putExtra("isin", 1);
 						startService(iupdate);
 					}
@@ -295,8 +314,32 @@ public class ScanWifiService extends Service {
 	public void OpenWifi() {
 		if (!mainWifi.isWifiEnabled()) {
 			mainWifi.setWifiEnabled(true);
-
 		}
+	}
+
+	public boolean isWifiApEnabled() {
+		return getWifiApState() == WIFI_AP_STATE.WIFI_AP_STATE_ENABLED;
+	}
+
+	private WIFI_AP_STATE getWifiApState() {
+		int tmp;
+		try {
+			Method method = mainWifi.getClass().getMethod("getWifiApState");
+			tmp = ((Integer) method.invoke(mainWifi));
+			// Fix for Android 4
+			if (tmp > 10) {
+				tmp = tmp - 10;
+			}
+			return WIFI_AP_STATE.class.getEnumConstants()[tmp];
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return WIFI_AP_STATE.WIFI_AP_STATE_FAILED;
+		}
+	}
+
+	public enum WIFI_AP_STATE {
+		WIFI_AP_STATE_DISABLING, WIFI_AP_STATE_DISABLED, WIFI_AP_STATE_ENABLING, WIFI_AP_STATE_ENABLED, WIFI_AP_STATE_FAILED
 	}
 
 	public int wifiin(String mac) {
@@ -324,7 +367,6 @@ public class ScanWifiService extends Service {
 	// 关闭WIFI
 	public void CloseWifi() {
 		if (mainWifi.isWifiEnabled()) {
-
 			mainWifi.setWifiEnabled(false);
 			WifiStatus = 2;
 		}

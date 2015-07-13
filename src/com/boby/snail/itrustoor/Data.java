@@ -14,15 +14,29 @@ public class Data extends Application {
 	private int wifiinschool;
 	private int familyid;
 	private int id;
+	private boolean enable3G;
+	private boolean enableWifi;
 	private String atplace;
 	private String atplacetime;
 	private MyDatabase dbHelper;
 	private boolean disenableScanWifi;
 	private String schoolname;
+	private boolean DebugMode; 
 	public void setenablestartservice(boolean sstart){
 		SharedPreferences.Editor editor = getSharedPreferences("snail",
 				MODE_PRIVATE).edit();
 		editor.putBoolean("startservice", sstart);
+		editor.commit();
+		
+	}
+	public Boolean getdebugmode(){
+		return DebugMode;
+	}
+	public void setdebugmode(boolean tb){
+		this.DebugMode=tb;
+		SharedPreferences.Editor editor = getSharedPreferences("snail",
+				MODE_PRIVATE).edit();
+		editor.putBoolean("DebugMode", tb);
 		editor.commit();
 		
 	}
@@ -92,6 +106,7 @@ public class Data extends Application {
 		wifiinschool = -1;
 		familyid = 0;
 		id = 0;
+		DebugMode=false;
 		atplace = "";
 		atplacetime = "";
 		editor.commit();// 提交修改
@@ -147,7 +162,30 @@ public class Data extends Application {
 	public int getinschool() {
 		return wifiinschool;
 	}
-
+	
+	public boolean getchange3G(){
+		return enable3G;
+	}
+	public void setchange3G(boolean tb){
+		this.enable3G=tb;
+		SharedPreferences.Editor editor = getSharedPreferences("snail",
+				MODE_PRIVATE).edit();
+		editor.putBoolean("Enable3G", tb);
+		editor.commit();		
+	}
+	
+	public boolean getchangewifi(){
+		return enableWifi;
+	}
+	public void setchangewifi(boolean tb){
+		this.enableWifi=tb;
+		SharedPreferences.Editor editor = getSharedPreferences("snail",
+				MODE_PRIVATE).edit();
+		editor.putBoolean("EnableWifi", tb);
+		editor.commit();		
+	}
+	
+	
 	public void setid(int sid) {
 		this.id = sid;
 		SharedPreferences.Editor editor = getSharedPreferences("snail",
@@ -168,6 +206,7 @@ public class Data extends Application {
 		values.put("atttime", object.getatttime());
 		values.put("schoolid", object.getschoolid());
 		values.put("isin", object.getIsin());
+		values.put("studentid", object.getid());
 		db.insert("DataBuffer", null, values);
 
 	}
@@ -185,9 +224,13 @@ public class Data extends Application {
 					.getColumnIndex("card")));
 			firstdatabuffer
 					.setIsin(cursor.getInt(cursor.getColumnIndex("isin")));
+			
+			firstdatabuffer
+			.setid(cursor.getInt(cursor.getColumnIndex("studentid")));
+			
 			firstdatabuffer.setschoolid(cursor.getInt(cursor
 					.getColumnIndex("schoolid")));
-			firstdatabuffer.setid(cursor.getInt(cursor.getColumnIndex("id")));
+
 			return firstdatabuffer;
 		}
 
@@ -206,21 +249,24 @@ public class Data extends Application {
 
 	public void delitem(int delid) {
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
-		db.delete("DataBuffer", "id=?", new String[] { String.valueOf(delid) });
+		db.delete("DataBuffer", "studentid=?", new String[] { String.valueOf(delid) });
 	}
 
 	@Override
 	public void onCreate() {
 		SharedPreferences pref = getSharedPreferences("snail", MODE_PRIVATE);
-		wififrequency = pref.getInt("wififrequency", 0);
+		wififrequency = pref.getInt("wififrequency", 2);
 		wifiinschool = pref.getInt("wifiinschool", -1);
 		familyid = pref.getInt("familyid", -1);
 		schoolname=pref.getString("schoolname", "");
 		atplace = pref.getString("atplace", "");
 		atplacetime = pref.getString("atplacetime", "");
 		id = pref.getInt("id", 0);
+		enable3G=pref.getBoolean("Enable3G", true);
+		enableWifi=pref.getBoolean("EnableWifi", true);
 		disenableScanWifi=false;
-		dbHelper = new MyDatabase(this, "Snail.db", null, 1);
+		dbHelper = new MyDatabase(this, "Snail.db", null, 2);
+		DebugMode=pref.getBoolean("DebugMode", false);
 		// dbHelper.getWritableDatabase();
 		super.onCreate();
 	}

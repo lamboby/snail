@@ -23,7 +23,7 @@
         android:layout_below="@+id/imageView"
         android:layout_marginTop="10dp"
         android:gravity="center_horizontal"
-        android:text="小蜗牛报平安"
+        android:text="亲亲报平安"
         android:textColor="#ffffff"
         android:textSize="20sp" />
 
@@ -88,7 +88,7 @@
     <Button
         android:id="@+id/btn_login"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:layout_below="@+id/relativeLayout2"
         android:layout_margin="20dp"
         android:layout_marginTop="20dp"
@@ -96,5 +96,16 @@
         android:text="登  录"
          android:background="@drawable/button_selector"
         android:textColor="#ffffff" />
+
+    <TextView
+        android:id="@+id/TextViewDebug"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView3"
+        android:layout_below="@+id/textView3"
+        android:gravity="center_horizontal"
+        android:text="[内测模式]"
+        android:textColor="#ff0000"
+        android:textSize="20sp" />
 
 </RelativeLayout>

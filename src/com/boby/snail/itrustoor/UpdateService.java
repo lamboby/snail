@@ -226,7 +226,7 @@ public class UpdateService extends Service {
 			}
 		}
 		Log.v("debug", "延时后发送数据" + String.valueOf(i));
-		HttpUtil.sendHttpPostRequest("/wifi/wifiAttends", strt,
+		HttpUtil.sendHttpPostRequest(myconfig.getdebugmode(),"/wifi/wifiAttends", strt,
 				
 					new HttpCallbackListener() {
 					@Override
@@ -266,7 +266,7 @@ public class UpdateService extends Service {
 							DataBuffer errdata = new DataBuffer();
 							errdata.setatttime(atttime);
 							errdata.setIsin(Isin);
-							errdata.setid(schoolid);
+							errdata.setid(studentid);
 							errdata.setcard(card);
 							errdata.setschoolid(schoolid);
 							myconfig.additem(errdata);

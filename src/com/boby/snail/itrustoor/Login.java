@@ -11,8 +11,8 @@ import java.net.URLEncoder;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import com.boby.snail.itrustoor.HttpUtil.HttpCallbackListener;
 import com.boby.snail.itrustoor.R;
+import com.boby.snail.itrustoor.HttpUtil.HttpCallbackListener;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -25,11 +25,14 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Base64;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.util.Log;
 
 public class Login extends Activity {
@@ -44,27 +47,75 @@ public class Login extends Activity {
 	private final String password = "itrustor";
 	private boolean enableSaveLogin = true;
 	private boolean schoolNull = false;
+	Data myconfig;// 全局变量
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
 		setContentView(R.layout.login);
 		SysApplication.getInstance().addActivity(this); 
 		Button btnLogin = (Button) findViewById(R.id.btn_login);
 		SharedPreferences pref = getSharedPreferences("snail", MODE_PRIVATE);
 		user_name = pref.getString("username", "");
 		user_password = pref.getString("userpassword", "");
-		EditText edtPhone = (EditText) findViewById(R.id.edtphone);
-		// EditText edtPassword = (EditText) findViewById(R.id.edtpassword);
+		final EditText edtPhone = (EditText) findViewById(R.id.edtphone);	
+		myconfig = (Data) getApplication();
 		edtPhone.setText(user_name);
-		// edtPassword.setText(spassword);
+		final TextView textviewDebug=(TextView)findViewById(R.id.TextViewDebug);
+        if(!myconfig.getdebugmode()){
+        	textviewDebug.setVisibility(View.GONE);
+        }
+        else
+        	textviewDebug.setVisibility(View.VISIBLE );
+	 
+		
+		edtPhone.addTextChangedListener(new TextWatcher() {
+	            private CharSequence temp;
+	            private boolean isEdit = true;
+	            private int selectionStart ;
+	            private int selectionEnd ;
+	            @Override
+	            public void beforeTextChanged(CharSequence s, int arg1, int arg2,
+	                    int arg3) {
+	                
+	            }
+	            
+	            @Override
+	            public void onTextChanged(CharSequence s, int arg1, int arg2,
+	                    int arg3) {
+	            }
+	            
+	            @Override
+	            public void afterTextChanged(Editable s) {
+	            		if(s.toString().equals("001")){
+	            			Log.v("debug",s.toString());
+	            			myconfig.setdebugmode(true);
+	            			edtPhone.setText("");
+	            			textviewDebug.setVisibility(View.VISIBLE);
+	            		}else
+	            		{
+	            			if(s.toString().equals("002")){
+		            			Log.v("debug",s.toString());
+		            			myconfig.setdebugmode(false);
+		            			edtPhone.setText("");
+		            			textviewDebug.setVisibility(View.GONE);
+	            			}
+	            		}
+	                }
+	            });
+
+		
+		
+		
+		
 		// 密码，长度要是8的倍数
 		if (user_name != "" && user_password != "") {
 			// 登录
 			dialog = ProgressDialog.show(Login.this, "", "正在登录云端服务器,请稍候");
 			String strlogin;
 			strlogin = "phone=" + user_name + "&password=" + user_password;
-			HttpUtil.sendHttpPostRequest("/snail/login", strlogin,
+			HttpUtil.sendHttpPostRequest(myconfig.getdebugmode(),"/snail/login", strlogin,
 					new HttpCallbackListener() {
 						@Override
 						public void onFinish(String response) {
@@ -80,7 +131,7 @@ public class Login extends Activity {
 						@Override
 						public void onError(Exception e) {
 							// 登录错误,直接进入主界面
-							Log.v("debug", "登录失败");
+				Log.v("debug", "登录失败");
 							Intent intent = new Intent(Login.this,
 									MainActivity.class);
 							startActivity(intent);
@@ -95,6 +146,7 @@ public class Login extends Activity {
 		btnLogin.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+							
 				// 登录
 				dialog = ProgressDialog.show(Login.this, "", "正在登录云端服务器,请稍候");
 				String strlogin;
@@ -104,7 +156,7 @@ public class Login extends Activity {
 				user_password = edtPassword.getText().toString().trim();
 				strlogin = "phone=" + user_name + "&password="
 						+ encrypt(user_password, password);
-				HttpUtil.sendHttpPostRequest("/snail/login", strlogin,
+				HttpUtil.sendHttpPostRequest(myconfig.getdebugmode(),"/snail/login", strlogin,
 						new HttpCallbackListener() {
 							@Override
 							public void onFinish(String response) {
@@ -219,7 +271,8 @@ public class Login extends Activity {
 						jsonArray = new JSONObject(response)
 								.getJSONArray("Data");
 						if  (jsonArray.getJSONObject(0).getString("wifi")
-										.equals("null")) {
+										.equals("null")|jsonArray.getJSONObject(0).getString("wifi")
+										.equals("")) {
 							editor.putString("wifi", "");
 							editor.commit();
 							new AlertDialog.Builder(Login.this)
@@ -294,14 +347,17 @@ public class Login extends Activity {
 					String reserr = "";
 					switch (resObject.getInt("Code")) {
 					case 1100:
-						reserr = "数据库处理错误";
+						reserr = "用户未找到";
 						break;
 					case 1009:
 						reserr = "参数错误";
 						break;
+					case 1003:
+						reserr="密码错误";
+						break;
 					default:
 						Log.v("Debug", String.valueOf(resObject.getInt("Code")));
-						reserr = resObject.getString("Msg");
+						reserr = "未知错误";
 						break;
 					}
 
@@ -320,7 +376,7 @@ public class Login extends Activity {
 		// 同步手动添加的定位点数据
 		dialog = ProgressDialog.show(Login.this, "", "正在同步扫描的定位点数据...");
 		Log.v("debug", "第二次同步");
-		HttpUtil.sendHttpPostRequest("/wifi/syncWifi", HttpString,
+		HttpUtil.sendHttpPostRequest(myconfig.getdebugmode(),"/wifi/syncWifi", HttpString,
 				new HttpCallbackListener() {
 					@Override
 					public void onFinish(String response) {

@@ -7,21 +7,32 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class HttpUtil {
-	//static String serverUrl = "http://test.itrustoor.com:8080/api";
-	static String serverUrl = "http://192.168.168.200:8080/api";
+import android.app.Application;
+import android.view.View;
+
+public class HttpUtil extends Application {
+	static Data myconfig;
+
+	static String serverUrl = "http://svr.itrustoor.com:8080/api";
+
+	// static String serverUrl = "http://192.168.168.200:8080/api";
 	public interface HttpCallbackListener {
 		void onFinish(String response);
+
 		void onError(Exception e);
 	}
 
-	public static void sendHttpPostRequest(final String address,
+	public static void sendHttpPostRequest(final boolean debug,final String address,
 			final String poststring, final HttpCallbackListener listener) {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
 				HttpURLConnection connection = null;
-				try {
+				try {	
+					if (debug) {
+						serverUrl="http://test.itrustoor.com:8080/api";
+						}
+					else serverUrl = "http://svr.itrustoor.com:8080/api"; 			
 					URL url = new URL(serverUrl + address);
 					connection = (HttpURLConnection) url.openConnection();
 					connection.setConnectTimeout(10000);

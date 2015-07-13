@@ -11,6 +11,16 @@
         android:layout_marginTop="15dip"
         android:orientation="vertical" >
 
+        <TextView
+            android:id="@+id/TDebug"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="[内测模式]"
+            android:visibility="gone" 
+            android:textColor="#ff0000"
+            android:textSize="20sp" />
+
         <LinearLayout
             android:id="@+id/itemContainer"
             android:layout_width="fill_parent"
@@ -193,6 +203,9 @@
                     android:paddingLeft="5dip"
                     android:text="	参数"
                     android:textSize="18sp" />
+
+                   
+
             </LinearLayout>
 
             <LinearLayout
@@ -220,4 +233,7 @@
          
         </LinearLayout>
 </LinearLayout>
+
+ 
+
 </ScrollView>

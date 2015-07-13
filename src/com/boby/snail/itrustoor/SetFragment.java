@@ -7,8 +7,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.boby.snail.itrustoor.HttpUtil.HttpCallbackListener;
 import com.boby.snail.itrustoor.R;
+import com.boby.snail.itrustoor.HttpUtil.HttpCallbackListener;
 import com.boby.snail.itrustoor.R.id;
 import com.zxing.activity.CaptureActivity;
 
@@ -173,7 +173,7 @@ public class SetFragment extends Fragment {
 			// 同步手动添加的定位点数据
 			dialog = ProgressDialog.show(getActivity(), "", "正在同步扫描的定位点数据...");
 			Log.v("debug", "第二次同步");
-			HttpUtil.sendHttpPostRequest("/wifi/syncWifi", HttpString,
+			HttpUtil.sendHttpPostRequest(myconfig.getdebugmode(),"/wifi/syncWifi", HttpString,
 					new HttpCallbackListener() {
 						@Override
 						public void onFinish(String response) {
@@ -200,7 +200,7 @@ public class SetFragment extends Fragment {
 	// 绑定二维码
 	public void bindcard(String HttpString) {
 		dialog = ProgressDialog.show(getActivity(), "", "数据绑定上传...");
-		HttpUtil.sendHttpPostRequest("/snail/bindCard", HttpString,
+		HttpUtil.sendHttpPostRequest(myconfig.getdebugmode(),"/snail/bindCard", HttpString,
 				new HttpCallbackListener() {
 					@Override
 					public void onFinish(String response) {
