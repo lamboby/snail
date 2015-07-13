@@ -1,0 +1,119 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="640dp" >
+
+        <LinearLayout
+            android:id="@+id/itemContainer"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="60dip"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                 android:id="@+id/linearScanbarcode"
+                android:layout_width="match_parent"
+                android:layout_height="50dip"
+                android:layout_marginLeft="10dip"
+                android:layout_marginRight="10dip"
+                android:background="@drawable/borderbottom"
+                android:clickable="true" 
+                android:visibility="gone" 
+                android:gravity="center_vertical" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="10dip"
+                    android:src="@drawable/qrcode" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:paddingLeft="5dip"
+                    android:text="  扫描二维码"
+                    android:textSize="15dp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="10dip"
+                    android:src="@drawable/into" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearSync"
+                android:layout_width="match_parent"
+                android:layout_height="50dip"
+                android:layout_marginLeft="10dip"
+                android:layout_marginRight="10dip"
+                android:layout_marginTop="10dip"
+                android:background="@drawable/bordertop"
+                android:clickable="true"
+                android:gravity="center_vertical" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="10dip"
+                    android:src="@drawable/synccloud" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:paddingLeft="5dip"
+                    android:text="  从云端同步"
+                    android:textSize="15dp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="10dip"
+                    android:src="@drawable/into" />
+            </LinearLayout>
+			
+            <LinearLayout
+                android:id="@+id/linearDelete"
+                android:layout_width="match_parent"
+                android:layout_height="50dip"
+                android:layout_marginLeft="10dip"
+                android:layout_marginRight="10dip"
+                android:background="@drawable/borderbottom"
+                android:clickable="true"
+                android:gravity="center_vertical" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="10dip"
+                     android:src="@drawable/del"
+              />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:paddingLeft="5dip"
+                    android:text="  删除"
+                    android:textSize="15dp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="10dip"
+                    android:src="@drawable/into" />
+            </LinearLayout>
+        </LinearLayout>
+        
+        
+    </RelativeLayout>
+
+</ScrollView>

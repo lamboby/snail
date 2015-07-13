@@ -1,0 +1,82 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="640dp" >
+
+        <LinearLayout
+            android:id="@+id/itemContainer"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="60dip"
+            android:orientation="vertical" >
+            <LinearLayout
+             
+				android:layout_width="match_parent"
+                android:layout_height="50dip"
+                android:layout_marginLeft="10dip"
+                android:layout_marginTop="10dip"
+                android:layout_marginRight="10dip"
+                android:background="@drawable/borderbottom"
+                android:duplicateParentState="true"
+                android:gravity="center_vertical" >
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="10dip"
+                    android:src="@drawable/checkup" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:paddingLeft="5dip"
+                    android:text="  检查更新"
+                    android:textSize="15dp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="10dip"
+                    android:src="@drawable/sl" />
+            </LinearLayout>
+            <LinearLayout
+               	android:layout_width="match_parent"
+                android:layout_height="50dip"
+                android:layout_marginLeft="10dip"
+                android:layout_marginRight="10dip"
+                android:background="@drawable/borderbottom"
+                android:duplicateParentState="true"
+                android:gravity="center_vertical" >
+			 <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="10dip"
+                    android:src="@drawable/submission" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:paddingLeft="5dip"
+                    android:text="  意见反馈  梁工 ：13071281562"
+                    android:textSize="15dp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="10dip"
+                    android:src="@drawable/sl" />
+            </LinearLayout>
+        
+            
+            
+        </LinearLayout>
+       
+    </RelativeLayout>
+
+</ScrollView>
